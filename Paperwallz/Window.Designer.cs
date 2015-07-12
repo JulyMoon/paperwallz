@@ -30,24 +30,24 @@
         {
             this.submitButton = new System.Windows.Forms.Button();
             this.urlRadioButton = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.pcRadioButton = new System.Windows.Forms.RadioButton();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.browseButton = new System.Windows.Forms.Button();
+            this.chooseGroupBox = new System.Windows.Forms.GroupBox();
+            this.redditGroupBox = new System.Windows.Forms.GroupBox();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.loginTextBox = new System.Windows.Forms.TextBox();
+            this.submitGroupBox = new System.Windows.Forms.GroupBox();
+            this.titleTextBox = new System.Windows.Forms.RichTextBox();
+            this.urlTextBox = new System.Windows.Forms.TextBox();
+            this.chooseGroupBox.SuspendLayout();
+            this.redditGroupBox.SuspendLayout();
+            this.submitGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // submitButton
             // 
+            this.submitButton.Enabled = false;
             this.submitButton.Location = new System.Drawing.Point(246, 19);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(122, 69);
@@ -58,6 +58,7 @@
             // urlRadioButton
             // 
             this.urlRadioButton.AutoSize = true;
+            this.urlRadioButton.Checked = true;
             this.urlRadioButton.Location = new System.Drawing.Point(6, 19);
             this.urlRadioButton.Name = "urlRadioButton";
             this.urlRadioButton.Size = new System.Drawing.Size(96, 17);
@@ -66,127 +67,130 @@
             this.urlRadioButton.Text = "Upload from url";
             this.urlRadioButton.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // pcRadioButton
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(183, 19);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(118, 17);
-            this.radioButton2.TabIndex = 6;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Upload from this PC";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.pcRadioButton.AutoSize = true;
+            this.pcRadioButton.Location = new System.Drawing.Point(190, 19);
+            this.pcRadioButton.Name = "pcRadioButton";
+            this.pcRadioButton.Size = new System.Drawing.Size(118, 17);
+            this.pcRadioButton.TabIndex = 6;
+            this.pcRadioButton.Text = "Upload from this PC";
+            this.pcRadioButton.UseVisualStyleBackColor = true;
+            this.pcRadioButton.CheckedChanged += new System.EventHandler(this.pcRadioButton_CheckedChanged);
             // 
-            // button1
+            // browseButton
             // 
-            this.button1.Location = new System.Drawing.Point(183, 42);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 20);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Browse...";
-            this.button1.UseVisualStyleBackColor = true;
+            this.browseButton.Enabled = false;
+            this.browseButton.Location = new System.Drawing.Point(190, 42);
+            this.browseButton.Name = "browseButton";
+            this.browseButton.Size = new System.Drawing.Size(178, 26);
+            this.browseButton.TabIndex = 7;
+            this.browseButton.Text = "Browse...";
+            this.browseButton.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // chooseGroupBox
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(281, 45);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Filename";
+            this.chooseGroupBox.Controls.Add(this.urlTextBox);
+            this.chooseGroupBox.Controls.Add(this.urlRadioButton);
+            this.chooseGroupBox.Controls.Add(this.browseButton);
+            this.chooseGroupBox.Controls.Add(this.pcRadioButton);
+            this.chooseGroupBox.Location = new System.Drawing.Point(12, 12);
+            this.chooseGroupBox.Name = "chooseGroupBox";
+            this.chooseGroupBox.Size = new System.Drawing.Size(374, 74);
+            this.chooseGroupBox.TabIndex = 9;
+            this.chooseGroupBox.TabStop = false;
+            this.chooseGroupBox.Text = "Choose source of the image";
             // 
-            // groupBox1
+            // redditGroupBox
             // 
-            this.groupBox1.Controls.Add(this.richTextBox1);
-            this.groupBox1.Controls.Add(this.urlRadioButton);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(374, 74);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Choose source of the image";
+            this.redditGroupBox.Controls.Add(this.passwordTextBox);
+            this.redditGroupBox.Controls.Add(this.loginTextBox);
+            this.redditGroupBox.Location = new System.Drawing.Point(12, 92);
+            this.redditGroupBox.Name = "redditGroupBox";
+            this.redditGroupBox.Size = new System.Drawing.Size(374, 45);
+            this.redditGroupBox.TabIndex = 10;
+            this.redditGroupBox.TabStop = false;
+            this.redditGroupBox.Text = "Reddit";
             // 
-            // richTextBox1
+            // passwordTextBox
             // 
-            this.richTextBox1.AccessibleDescription = "asdasd";
-            this.richTextBox1.AccessibleName = "asdasdasd";
-            this.richTextBox1.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.richTextBox1.Location = new System.Drawing.Point(6, 43);
-            this.richTextBox1.Multiline = false;
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(153, 19);
-            this.richTextBox1.TabIndex = 9;
-            this.richTextBox1.Tag = "sad";
-            this.richTextBox1.Text = "Enter url here";
+            this.passwordTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.passwordTextBox.Location = new System.Drawing.Point(190, 19);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.Size = new System.Drawing.Size(178, 20);
+            this.passwordTextBox.TabIndex = 1;
+            this.passwordTextBox.Text = "Password";
+            this.passwordTextBox.UseSystemPasswordChar = true;
+            this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
+            this.passwordTextBox.Enter += new System.EventHandler(this.passwordTextBox_Enter);
+            this.passwordTextBox.Leave += new System.EventHandler(this.passwordTextBox_Leave);
             // 
-            // groupBox2
+            // loginTextBox
             // 
-            this.groupBox2.Controls.Add(this.textBox2);
-            this.groupBox2.Controls.Add(this.textBox1);
-            this.groupBox2.Location = new System.Drawing.Point(12, 92);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(374, 45);
-            this.groupBox2.TabIndex = 10;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Reddit";
+            this.loginTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.loginTextBox.Location = new System.Drawing.Point(6, 19);
+            this.loginTextBox.Name = "loginTextBox";
+            this.loginTextBox.Size = new System.Drawing.Size(178, 20);
+            this.loginTextBox.TabIndex = 0;
+            this.loginTextBox.Text = "Username";
+            this.loginTextBox.TextChanged += new System.EventHandler(this.loginTextBox_TextChanged);
+            this.loginTextBox.Enter += new System.EventHandler(this.loginTextBox_Enter);
+            this.loginTextBox.Leave += new System.EventHandler(this.loginTextBox_Leave);
             // 
-            // textBox1
+            // submitGroupBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(6, 19);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(178, 20);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Text = "Login";
+            this.submitGroupBox.Controls.Add(this.titleTextBox);
+            this.submitGroupBox.Controls.Add(this.submitButton);
+            this.submitGroupBox.Location = new System.Drawing.Point(12, 143);
+            this.submitGroupBox.Name = "submitGroupBox";
+            this.submitGroupBox.Size = new System.Drawing.Size(374, 94);
+            this.submitGroupBox.TabIndex = 11;
+            this.submitGroupBox.TabStop = false;
+            this.submitGroupBox.Text = "Come up with a title and submit";
             // 
-            // textBox2
+            // titleTextBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(190, 19);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(178, 20);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.Text = "Password";
+            this.titleTextBox.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.titleTextBox.Location = new System.Drawing.Point(6, 19);
+            this.titleTextBox.Name = "titleTextBox";
+            this.titleTextBox.Size = new System.Drawing.Size(234, 69);
+            this.titleTextBox.TabIndex = 1;
+            this.titleTextBox.Text = "Title";
+            this.titleTextBox.TextChanged += new System.EventHandler(this.titleTextBox_TextChanged);
+            this.titleTextBox.Enter += new System.EventHandler(this.titleTextBox_Enter);
+            this.titleTextBox.Leave += new System.EventHandler(this.titleTextBox_Leave);
             // 
-            // groupBox3
+            // urlTextBox
             // 
-            this.groupBox3.Controls.Add(this.richTextBox2);
-            this.groupBox3.Controls.Add(this.submitButton);
-            this.groupBox3.Location = new System.Drawing.Point(12, 143);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(374, 94);
-            this.groupBox3.TabIndex = 11;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Come up with a title and submit";
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox2.Location = new System.Drawing.Point(6, 19);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(234, 69);
-            this.richTextBox2.TabIndex = 1;
-            this.richTextBox2.Text = "Title";
+            this.urlTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.urlTextBox.Location = new System.Drawing.Point(6, 42);
+            this.urlTextBox.Name = "urlTextBox";
+            this.urlTextBox.Size = new System.Drawing.Size(178, 20);
+            this.urlTextBox.TabIndex = 8;
+            this.urlTextBox.Text = "Url";
+            this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
+            this.urlTextBox.Enter += new System.EventHandler(this.urlTextBox_Enter);
+            this.urlTextBox.Leave += new System.EventHandler(this.urlTextBox_Leave);
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(398, 249);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.submitGroupBox);
+            this.Controls.Add(this.redditGroupBox);
+            this.Controls.Add(this.chooseGroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Window";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paperwallz";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
+            this.chooseGroupBox.ResumeLayout(false);
+            this.chooseGroupBox.PerformLayout();
+            this.redditGroupBox.ResumeLayout(false);
+            this.redditGroupBox.PerformLayout();
+            this.submitGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -195,17 +199,16 @@
 
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.RadioButton urlRadioButton;
-        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton pcRadioButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.Button browseButton;
+        private System.Windows.Forms.GroupBox chooseGroupBox;
+        private System.Windows.Forms.GroupBox redditGroupBox;
+        private System.Windows.Forms.TextBox passwordTextBox;
+        private System.Windows.Forms.TextBox loginTextBox;
+        private System.Windows.Forms.GroupBox submitGroupBox;
+        private System.Windows.Forms.RichTextBox titleTextBox;
+        private System.Windows.Forms.TextBox urlTextBox;
     }
 }
 
