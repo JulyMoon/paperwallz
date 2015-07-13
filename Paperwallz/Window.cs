@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,11 +19,20 @@ namespace Paperwallz
         private const string urlDefault = "Url";
         private const string passwordDefault = "Password";
         private const string titleDefault = "Title";
-        //private bool goodUrl = false;
+        private readonly string scriptLocation;
 
         public Window()
         {
             InitializeComponent();
+
+            string exeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            scriptLocation = Path.Combine(exeDirectory, "py", "paperwallz.py");
+
+            if (!File.Exists(scriptLocation))
+            {
+                MessageBox.Show("Script not found", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(0);
+            }
         }
 
         private void IsSubmitEnabled()
@@ -109,6 +121,35 @@ namespace Paperwallz
         private void titleTextBox_TextChanged(object sender, EventArgs e)
         {
             IsSubmitEnabled();
+        }
+
+        private void submitButton_Click(object sender, EventArgs e)
+        {
+            SuspendLayout();
+
+            Process pyscript = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "python",
+                    Arguments = "-W ignore " +
+                                "\"" + scriptLocation +
+                                "\" -t \"" + titleTextBox.Text +
+                                "\" -u \"" + urlTextBox.Text +
+                                "\" -n \"" + loginTextBox.Text +
+                                "\" -p \"" + passwordTextBox.Text +
+                                "\" -i",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            pyscript.Start();
+            string output = pyscript.StandardOutput.ReadToEnd();
+            pyscript.WaitForExit();
+            MessageBox.Show(output);
+            ResumeLayout();
         }
     }
 }
