@@ -10,9 +10,10 @@ description = 'This image was uploaded using ' + user_agent
 title = url = username = password = fromurl = None
 
 def get_input():
-    global title, url
+    global title, url, username, password, fromurl
     
     for i in range(len(sys.argv)):
+        print(sys.argv[i])
         if sys.argv[i] == '-t':
             title = sys.argv[i + 1]
         elif sys.argv[i] == '-u':
@@ -28,6 +29,8 @@ def get_input():
         print('Not enough arguments')
         sys.exit()
 
+get_input()
+
 def upload():
     global title, description, url, client_id, client_secret
     
@@ -40,7 +43,6 @@ def upload():
 
 print("Uploading the image...", end = "")
 image = upload()
-print("   OK\nSubmitting the image...", end = "")
 
 def submit():
     global user_agent, username, password, subreddit, title, image
@@ -48,5 +50,6 @@ def submit():
     r.login(username, password, disable_warning = True)
     r.submit(subreddit, title + ' [' + str(image['width']) + '×' + str(image['height']) + ']', url = image['link'])
 
+print("   OK\nSubmitting the image...", end = "")
 submit()
 print("   OK")
