@@ -37,4 +37,4 @@ image = ImgurClient(client_id, client_secret).upload_from_url(url, config = { 't
 print('WEREDONEWITHIMGURBOYS')
 
 #submitting:
-print('PEACEOUT ' + r.submit(subreddit, title + ' [' + str(image['width']) + 'x' + str(image['height']) + ']', url = image['link']).permalink)
+print('PEACEOUT ' + r.submit(subreddit, title + ' [' + str(image['width']) + '×' + str(image['height']) + ']', url = image['link']).permalink)
