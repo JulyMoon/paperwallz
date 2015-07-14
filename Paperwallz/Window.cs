@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Paperwallz
@@ -18,14 +12,16 @@ namespace Paperwallz
         private const string loginDefault = "Username";
         private const string urlDefault = "Url";
         private const string passwordDefault = "Password";
-        private const string titleDefault = "Title";
+        private const string titleDefault = "The title goes here";
         private readonly string scriptLocation;
 
         public Window()
         {
             InitializeComponent();
+            urlTextBox.Select();
 
             string exeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            // ReSharper disable once AssignNullToNotNullAttribute
             scriptLocation = Path.Combine(exeDirectory, "py", "paperwallz.py");
 
             if (!File.Exists(scriptLocation))
@@ -97,12 +93,6 @@ namespace Paperwallz
             Change((Control)sender, false, titleDefault);
         }
 
-        private void pcRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            urlTextBox.Enabled = !urlTextBox.Enabled;
-            browseButton.Enabled = !browseButton.Enabled;
-        }
-
         private void loginTextBox_TextChanged(object sender, EventArgs e)
         {
             IsSubmitEnabled();
@@ -115,6 +105,7 @@ namespace Paperwallz
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
         {
+            urlRadioButton.Checked = true;
             IsSubmitEnabled();
         }
 
@@ -125,7 +116,8 @@ namespace Paperwallz
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            SuspendLayout();
+            Enabled = false;
+            UseWaitCursor = true;
 
             Process pyscript = new Process
             {
@@ -149,7 +141,14 @@ namespace Paperwallz
             string output = pyscript.StandardOutput.ReadToEnd();
             pyscript.WaitForExit();
             MessageBox.Show(output);
-            ResumeLayout();
+
+            Enabled = true;
+            UseWaitCursor = false;
+        }
+
+        private void browseButton_Click(object sender, EventArgs e)
+        {
+            pcRadioButton.Checked = true;
         }
     }
 }
