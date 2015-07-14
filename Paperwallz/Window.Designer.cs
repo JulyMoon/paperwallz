@@ -41,6 +41,7 @@
             this.loginTextBox = new System.Windows.Forms.TextBox();
             this.titleTextBox = new System.Windows.Forms.RichTextBox();
             this.aboutButton = new System.Windows.Forms.Button();
+            this.openButton = new System.Windows.Forms.Button();
             this.chooseGroupBox.SuspendLayout();
             this.redditGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -48,9 +49,9 @@
             // submitButton
             // 
             this.submitButton.Enabled = false;
-            this.submitButton.Location = new System.Drawing.Point(117, 175);
+            this.submitButton.Location = new System.Drawing.Point(90, 175);
             this.submitButton.Name = "submitButton";
-            this.submitButton.Size = new System.Drawing.Size(193, 31);
+            this.submitButton.Size = new System.Drawing.Size(142, 31);
             this.submitButton.TabIndex = 5;
             this.submitButton.Text = "Submit";
             this.submitButton.UseVisualStyleBackColor = true;
@@ -181,10 +182,21 @@
             // 
             this.aboutButton.Location = new System.Drawing.Point(12, 175);
             this.aboutButton.Name = "aboutButton";
-            this.aboutButton.Size = new System.Drawing.Size(99, 31);
+            this.aboutButton.Size = new System.Drawing.Size(72, 31);
             this.aboutButton.TabIndex = 12;
             this.aboutButton.Text = "About";
             this.aboutButton.UseVisualStyleBackColor = true;
+            // 
+            // openButton
+            // 
+            this.openButton.Enabled = false;
+            this.openButton.Location = new System.Drawing.Point(238, 175);
+            this.openButton.Name = "openButton";
+            this.openButton.Size = new System.Drawing.Size(72, 31);
+            this.openButton.TabIndex = 13;
+            this.openButton.Text = "Open";
+            this.openButton.UseVisualStyleBackColor = true;
+            this.openButton.Click += new System.EventHandler(this.openButton_Click);
             // 
             // Window
             // 
@@ -192,6 +204,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(322, 218);
+            this.Controls.Add(this.openButton);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.submitButton);
@@ -226,6 +239,7 @@
         private System.Windows.Forms.RichTextBox titleTextBox;
         private System.Windows.Forms.TextBox urlTextBox;
         private System.Windows.Forms.Button aboutButton;
+        private System.Windows.Forms.Button openButton;
     }
 }
 

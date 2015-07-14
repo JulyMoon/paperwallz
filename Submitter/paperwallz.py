@@ -7,14 +7,15 @@ user_agent = 'Paperwallz by /u/foxneZz'
 subreddit = 'wallpapers'
 description = 'This image was uploaded using [' + user_agent + ']'
 
-title = url = username = password = fromurl = None
+title = file = username = password = fromurl = None
 
 #stuffing arguments into variables
 for i in range(len(sys.argv)):
+    print(sys.argv[i]) #debugging purposes
     if sys.argv[i] == '-t': #title
         title = sys.argv[i + 1]
-    elif sys.argv[i] == '-u': #image path/url
-        url = sys.argv[i + 1]
+    elif sys.argv[i] == '-f': #image path/url
+        file = sys.argv[i + 1]
     elif sys.argv[i] == '-n': #username
         username = sys.argv[i + 1]
     elif sys.argv[i] == '-p': #password
@@ -22,7 +23,7 @@ for i in range(len(sys.argv)):
     elif sys.argv[i] == '-i': #image source
         fromurl = True
 
-if title == None or url == None or username == None or password == None:
+if title == None or file == None or username == None or password == None:
     print('NOTENOUGHARGUMENTSLEL')
     sys.exit()
 
@@ -33,8 +34,10 @@ r = praw.Reddit(user_agent = user_agent)
 r.login(username, password, disable_warning = True)
 
 #uploading:
-image = ImgurClient(client_id, client_secret).upload_from_url(url, config = { 'title': title, 'description': description }, anon = True)
-print('WEREDONEWITHIMGURBOYS')
+image = ImgurClient(client_id, client_secret)
+upload = image.upload_from_url if fromurl else image.upload_from_path
+image = upload(file, config = { 'title': title, 'description': description }, anon = False)
+print('DONEWITHIMGUR')
 
 #submitting:
 print('PEACEOUT ' + r.submit(subreddit, title + ' [' + str(image['width']) + '×' + str(image['height']) + ']', url = image['link']).permalink)

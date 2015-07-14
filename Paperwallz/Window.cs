@@ -10,6 +10,7 @@ namespace Paperwallz
     public partial class Window : Form
     {
         private readonly string scriptLocation;
+        private string link;
         private bool gotUsername, gotPassword, gotFile, gotTitle;
 
         public Window()
@@ -68,10 +69,19 @@ namespace Paperwallz
             UpdateSubmitButton();
         }
 
+        private void FreezeWindow(bool disable)
+        {
+            UseWaitCursor = disable;
+            loginTextBox.ReadOnly = disable;
+            passwordTextBox.ReadOnly = disable;
+            urlTextBox.ReadOnly = disable;
+            titleTextBox.ReadOnly = disable;
+            Enabled = !disable;
+        }
+
         private void submitButton_Click(object sender, EventArgs e)
         {
-            Enabled = false;
-            UseWaitCursor = true;
+            FreezeWindow(true);
 
             Process pyscript = new Process
             {
@@ -81,7 +91,7 @@ namespace Paperwallz
                     Arguments = "-W ignore " +
                                 "\"" + scriptLocation +
                                 "\" -t \"" + titleTextBox.Text +
-                                "\" -u \"" + (urlRadioButton.Checked ? urlTextBox.Text : openFileDialog.FileName) +
+                                "\" -f \"" + (urlRadioButton.Checked ? urlTextBox.Text : openFileDialog.FileName) +
                                 "\" -n \"" + loginTextBox.Text +
                                 "\" -p \"" + passwordTextBox.Text +
                                 (urlRadioButton.Checked ? "\" -i" : "\""),
@@ -94,15 +104,24 @@ namespace Paperwallz
             pyscript.Start();
             string output = pyscript.StandardOutput.ReadToEnd();
             pyscript.WaitForExit();
+
+            foreach (var line in output.Split('\n'))
+                if (line.StartsWith("PEACEOUT"))
+                {
+                    link = line.Split(' ')[1];
+                    openButton.Enabled = true;
+                    break;
+                }
+
             MessageBox.Show(output);
 
-            Enabled = true;
-            UseWaitCursor = false;
+            FreezeWindow(false);
         }
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            pcRadioButton.Checked = openFileDialog.ShowDialog() == DialogResult.OK;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+                pcRadioButton.Checked = gotFile = true;
         }
 
         private void urlRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -135,6 +154,11 @@ namespace Paperwallz
                 textbox.ForeColor = SystemColors.GrayText;
                 textbox.Text = textbox.AccessibleName;
             }
+        }
+
+        private void openButton_Click(object sender, EventArgs e)
+        {
+            Process.Start(link);
         }
     }
 }
