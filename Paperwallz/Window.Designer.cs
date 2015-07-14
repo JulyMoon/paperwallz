@@ -67,6 +67,7 @@
             this.urlRadioButton.TabStop = true;
             this.urlRadioButton.Text = "Upload from url";
             this.urlRadioButton.UseVisualStyleBackColor = true;
+            this.urlRadioButton.CheckedChanged += new System.EventHandler(this.urlRadioButton_CheckedChanged);
             // 
             // pcRadioButton
             // 
@@ -77,6 +78,11 @@
             this.pcRadioButton.TabIndex = 6;
             this.pcRadioButton.Text = "Upload from this PC";
             this.pcRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Images|*.png;*.jpg;*.jpeg;*.gif;*.bmp";
+            this.openFileDialog.Title = "Submit an image";
             // 
             // browseButton
             // 
@@ -103,6 +109,7 @@
             // 
             // urlTextBox
             // 
+            this.urlTextBox.AccessibleName = "Url";
             this.urlTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.urlTextBox.Location = new System.Drawing.Point(6, 42);
             this.urlTextBox.Name = "urlTextBox";
@@ -110,8 +117,8 @@
             this.urlTextBox.TabIndex = 3;
             this.urlTextBox.Text = "Url";
             this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
-            this.urlTextBox.Enter += new System.EventHandler(this.urlTextBox_Enter);
-            this.urlTextBox.Leave += new System.EventHandler(this.urlTextBox_Leave);
+            this.urlTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
+            this.urlTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
             // 
             // redditGroupBox
             // 
@@ -126,19 +133,22 @@
             // 
             // passwordTextBox
             // 
+            this.passwordTextBox.AccessibleName = "Password";
             this.passwordTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.passwordTextBox.Location = new System.Drawing.Point(152, 19);
+            this.passwordTextBox.MaxLength = 250;
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(140, 20);
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.Text = "Password";
             this.passwordTextBox.UseSystemPasswordChar = true;
             this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
-            this.passwordTextBox.Enter += new System.EventHandler(this.passwordTextBox_Enter);
-            this.passwordTextBox.Leave += new System.EventHandler(this.passwordTextBox_Leave);
+            this.passwordTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
+            this.passwordTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
             // 
             // loginTextBox
             // 
+            this.loginTextBox.AccessibleName = "Username";
             this.loginTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.loginTextBox.Location = new System.Drawing.Point(6, 19);
             this.loginTextBox.MaxLength = 20;
@@ -147,11 +157,12 @@
             this.loginTextBox.TabIndex = 1;
             this.loginTextBox.Text = "Username";
             this.loginTextBox.TextChanged += new System.EventHandler(this.loginTextBox_TextChanged);
-            this.loginTextBox.Enter += new System.EventHandler(this.loginTextBox_Enter);
-            this.loginTextBox.Leave += new System.EventHandler(this.loginTextBox_Leave);
+            this.loginTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
+            this.loginTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
             // 
             // titleTextBox
             // 
+            this.titleTextBox.AccessibleName = "The title goes here";
             this.titleTextBox.DetectUrls = false;
             this.titleTextBox.Font = new System.Drawing.Font("Verdana", 14F);
             this.titleTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
@@ -163,8 +174,8 @@
             this.titleTextBox.TabIndex = 4;
             this.titleTextBox.Text = "The title goes here";
             this.titleTextBox.TextChanged += new System.EventHandler(this.titleTextBox_TextChanged);
-            this.titleTextBox.Enter += new System.EventHandler(this.titleTextBox_Enter);
-            this.titleTextBox.Leave += new System.EventHandler(this.titleTextBox_Leave);
+            this.titleTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
+            this.titleTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
             // 
             // aboutButton
             // 
