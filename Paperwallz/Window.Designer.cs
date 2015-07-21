@@ -117,6 +117,7 @@
             this.urlTextBox.Size = new System.Drawing.Size(140, 20);
             this.urlTextBox.TabIndex = 3;
             this.urlTextBox.Text = "Url";
+            this.urlTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
             this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
             this.urlTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
             this.urlTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
@@ -186,10 +187,10 @@
             this.aboutButton.TabIndex = 12;
             this.aboutButton.Text = "About";
             this.aboutButton.UseVisualStyleBackColor = true;
+            this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
             // 
             // openButton
             // 
-            this.openButton.Enabled = false;
             this.openButton.Location = new System.Drawing.Point(238, 175);
             this.openButton.Name = "openButton";
             this.openButton.Size = new System.Drawing.Size(72, 31);

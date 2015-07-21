@@ -10,7 +10,7 @@ namespace Paperwallz
     public partial class Window : Form
     {
         private readonly string scriptLocation;
-        private string link;
+        private const string link = "https://www.reddit.com/r/wallpapers/new/";
         private bool gotUsername, gotPassword, gotFile, gotTitle;
 
         public Window()
@@ -69,19 +69,17 @@ namespace Paperwallz
             UpdateSubmitButton();
         }
 
-        private void FreezeWindow(bool disable)
+        private void ChangeWindow(bool enable)
         {
-            UseWaitCursor = disable;
-            loginTextBox.ReadOnly = disable;
-            passwordTextBox.ReadOnly = disable;
-            urlTextBox.ReadOnly = disable;
-            titleTextBox.ReadOnly = disable;
-            Enabled = !disable;
+            redditGroupBox.Enabled = enable;
+            chooseGroupBox.Enabled = enable;
+            titleTextBox.Enabled = enable;
+            UseWaitCursor = !enable;
         }
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            FreezeWindow(true);
+            ChangeWindow(false);
 
             Process pyscript = new Process
             {
@@ -105,17 +103,17 @@ namespace Paperwallz
             string output = pyscript.StandardOutput.ReadToEnd();
             pyscript.WaitForExit();
 
-            foreach (var line in output.Split('\n'))
+            /*foreach (var line in output.Split('\n'))
                 if (line.StartsWith("PEACEOUT"))
                 {
                     link = line.Split(' ')[1];
                     openButton.Enabled = true;
                     break;
-                }
+                }*/
 
-            MessageBox.Show(output);
+            //MessageBox.Show(output);
 
-            FreezeWindow(false);
+            ChangeWindow(true);
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -159,6 +157,19 @@ namespace Paperwallz
         private void openButton_Click(object sender, EventArgs e)
         {
             Process.Start(link);
+        }
+
+        private void TextBoxSelector(object sender, MouseEventArgs e)
+        {
+            var textbox = (TextBoxBase)sender;
+
+            if (textbox.SelectionLength == 0)
+                textbox.SelectAll();
+        }
+
+        private void aboutButton_Click(object sender, EventArgs e)
+        {
+            ChangeWindow(false);
         }
     }
 }
