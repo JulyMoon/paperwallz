@@ -42,6 +42,7 @@
             this.titleTextBox = new System.Windows.Forms.RichTextBox();
             this.aboutButton = new System.Windows.Forms.Button();
             this.openButton = new System.Windows.Forms.Button();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.chooseGroupBox.SuspendLayout();
             this.redditGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +53,7 @@
             this.submitButton.Location = new System.Drawing.Point(90, 175);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(142, 31);
-            this.submitButton.TabIndex = 5;
+            this.submitButton.TabIndex = 9;
             this.submitButton.Text = "Submit";
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
@@ -64,7 +65,7 @@
             this.urlRadioButton.Location = new System.Drawing.Point(6, 19);
             this.urlRadioButton.Name = "urlRadioButton";
             this.urlRadioButton.Size = new System.Drawing.Size(96, 17);
-            this.urlRadioButton.TabIndex = 5;
+            this.urlRadioButton.TabIndex = 3;
             this.urlRadioButton.TabStop = true;
             this.urlRadioButton.Text = "Upload from url";
             this.urlRadioButton.UseVisualStyleBackColor = true;
@@ -76,7 +77,7 @@
             this.pcRadioButton.Location = new System.Drawing.Point(152, 19);
             this.pcRadioButton.Name = "pcRadioButton";
             this.pcRadioButton.Size = new System.Drawing.Size(118, 17);
-            this.pcRadioButton.TabIndex = 6;
+            this.pcRadioButton.TabIndex = 4;
             this.pcRadioButton.Text = "Upload from this PC";
             this.pcRadioButton.UseVisualStyleBackColor = true;
             // 
@@ -90,7 +91,7 @@
             this.browseButton.Location = new System.Drawing.Point(152, 40);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(140, 23);
-            this.browseButton.TabIndex = 7;
+            this.browseButton.TabIndex = 6;
             this.browseButton.Text = "Browse...";
             this.browseButton.UseVisualStyleBackColor = true;
             this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
@@ -115,7 +116,7 @@
             this.urlTextBox.Location = new System.Drawing.Point(6, 42);
             this.urlTextBox.Name = "urlTextBox";
             this.urlTextBox.Size = new System.Drawing.Size(140, 20);
-            this.urlTextBox.TabIndex = 3;
+            this.urlTextBox.TabIndex = 5;
             this.urlTextBox.Text = "Url";
             this.urlTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
             this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
@@ -144,6 +145,7 @@
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.Text = "Password";
             this.passwordTextBox.UseSystemPasswordChar = true;
+            this.passwordTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
             this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
             this.passwordTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
             this.passwordTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
@@ -158,6 +160,7 @@
             this.loginTextBox.Size = new System.Drawing.Size(140, 20);
             this.loginTextBox.TabIndex = 1;
             this.loginTextBox.Text = "Username";
+            this.loginTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
             this.loginTextBox.TextChanged += new System.EventHandler(this.loginTextBox_TextChanged);
             this.loginTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
             this.loginTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
@@ -173,8 +176,9 @@
             this.titleTextBox.Multiline = false;
             this.titleTextBox.Name = "titleTextBox";
             this.titleTextBox.Size = new System.Drawing.Size(298, 31);
-            this.titleTextBox.TabIndex = 4;
+            this.titleTextBox.TabIndex = 7;
             this.titleTextBox.Text = "The title goes here";
+            this.titleTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
             this.titleTextBox.TextChanged += new System.EventHandler(this.titleTextBox_TextChanged);
             this.titleTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
             this.titleTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
@@ -184,7 +188,7 @@
             this.aboutButton.Location = new System.Drawing.Point(12, 175);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(72, 31);
-            this.aboutButton.TabIndex = 12;
+            this.aboutButton.TabIndex = 8;
             this.aboutButton.Text = "About";
             this.aboutButton.UseVisualStyleBackColor = true;
             this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
@@ -194,10 +198,15 @@
             this.openButton.Location = new System.Drawing.Point(238, 175);
             this.openButton.Name = "openButton";
             this.openButton.Size = new System.Drawing.Size(72, 31);
-            this.openButton.TabIndex = 13;
+            this.openButton.TabIndex = 10;
             this.openButton.Text = "Open";
             this.openButton.UseVisualStyleBackColor = true;
             this.openButton.Click += new System.EventHandler(this.openButton_Click);
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
             // 
             // Window
             // 
@@ -241,6 +250,7 @@
         private System.Windows.Forms.TextBox urlTextBox;
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.Button openButton;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
 

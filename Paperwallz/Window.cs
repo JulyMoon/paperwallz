@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -11,16 +12,15 @@ namespace Paperwallz
     {
         private readonly string scriptLocation;
         private const string link = "https://www.reddit.com/r/wallpapers/new/";
-        private bool gotUsername, gotPassword, gotFile, gotTitle;
+        private bool gotUsername, gotPassword, gotFile, gotTitle, notInProcess = true;
 
         public Window()
         {
             InitializeComponent();
-            urlRadioButton.Select();
+            urlTextBox.Select();
 
-            string exeDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             // ReSharper disable once AssignNullToNotNullAttribute
-            scriptLocation = Path.Combine(exeDirectory, "py", "paperwallz.py");
+            scriptLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "py", "paperwallz.py");
 
             if (!File.Exists(scriptLocation))
             {
@@ -31,7 +31,7 @@ namespace Paperwallz
 
         private void UpdateSubmitButton()
         {
-            submitButton.Enabled = gotUsername && gotPassword && gotFile && gotTitle;
+            submitButton.Enabled = gotUsername && gotPassword && gotFile && gotTitle && notInProcess;
         }
 
         private void loginTextBox_TextChanged(object sender, EventArgs e)
@@ -69,51 +69,31 @@ namespace Paperwallz
             UpdateSubmitButton();
         }
 
-        private void ChangeWindow(bool enable)
-        {
-            redditGroupBox.Enabled = enable;
-            chooseGroupBox.Enabled = enable;
-            titleTextBox.Enabled = enable;
-            UseWaitCursor = !enable;
-        }
-
         private void submitButton_Click(object sender, EventArgs e)
         {
-            ChangeWindow(false);
+            Text = "Paperwallz [Submitting]";
+            notInProcess = false;
+            UpdateSubmitButton();
 
-            Process pyscript = new Process
+            backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
+                (urlRadioButton.Checked ? urlTextBox.Text : openFileDialog.FileName), loginTextBox.Text,
+                passwordTextBox.Text, urlRadioButton.Checked));
+        }
+
+        private struct ScriptArgs
+        {
+            public readonly bool fromUrl;
+            public readonly string scriptLocation, title, file, username, password;
+
+            public ScriptArgs(string scriptLocation, string title, string file, string username, string password, bool fromUrl)
             {
-                StartInfo =
-                {
-                    FileName = "python",
-                    Arguments = "-W ignore " +
-                                "\"" + scriptLocation +
-                                "\" -t \"" + titleTextBox.Text +
-                                "\" -f \"" + (urlRadioButton.Checked ? urlTextBox.Text : openFileDialog.FileName) +
-                                "\" -n \"" + loginTextBox.Text +
-                                "\" -p \"" + passwordTextBox.Text +
-                                (urlRadioButton.Checked ? "\" -i" : "\""),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            };
-
-            pyscript.Start();
-            string output = pyscript.StandardOutput.ReadToEnd();
-            pyscript.WaitForExit();
-
-            /*foreach (var line in output.Split('\n'))
-                if (line.StartsWith("PEACEOUT"))
-                {
-                    link = line.Split(' ')[1];
-                    openButton.Enabled = true;
-                    break;
-                }*/
-
-            //MessageBox.Show(output);
-
-            ChangeWindow(true);
+                this.scriptLocation = scriptLocation;
+                this.title = title;
+                this.file = file;
+                this.username = username;
+                this.password = password;
+                this.fromUrl = fromUrl;
+            }
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -169,7 +149,44 @@ namespace Paperwallz
 
         private void aboutButton_Click(object sender, EventArgs e)
         {
-            ChangeWindow(false);
+            throw new NotImplementedException();
+        }
+
+        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            var args = (ScriptArgs)e.Argument;
+
+            Process pyscript = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "python",
+                    Arguments = "-W ignore " +
+                                "\"" + args.scriptLocation +
+                                "\" -t \"" + args.title +
+                                "\" -f \"" + args.file +
+                                "\" -n \"" + args.username +
+                                "\" -p \"" + args.password +
+                                (args.fromUrl ? "\" -i" : "\""),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            pyscript.Start();
+            string output = pyscript.StandardOutput.ReadToEnd();
+            pyscript.WaitForExit();
+
+            if (output.Split('\n').All(line => !line.StartsWith("PEACEOUT")))
+                MessageBox.Show(output);
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            Text = "Paperwallz";
+            notInProcess = true;
+            UpdateSubmitButton();
         }
     }
 }
