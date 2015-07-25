@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -39,30 +38,25 @@ namespace Paperwallz
 
         private void loginTextBox_TextChanged(object sender, EventArgs e)
         {
-            gotUsername = loginTextBox.ForeColor == SystemColors.WindowText && loginTextBox.Text.Length > 0;
+            gotUsername = HasText(loginTextBox);
             UpdateSubmitButton();
         }
 
         private void passwordTextBox_TextChanged(object sender, EventArgs e)
         {
-            gotPassword = passwordTextBox.ForeColor == SystemColors.WindowText && passwordTextBox.Text.Length > 0;
+            gotPassword = HasText(passwordTextBox);
             UpdateSubmitButton();
         }
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
         {
-            gotFile = IsUrlValid();
+            gotFile = HasText(urlTextBox);
             UpdateSubmitButton();
         }
 
-        private bool IsUrlValid()
+        private static bool HasText(TextBoxBase textbox)
         {
-            return urlTextBox.Text.Length > 0 && urlTextBox.ForeColor == SystemColors.WindowText;
-            /*Uri uriResult;
-            return Uri.TryCreate(urlTextBox.Text.StartsWith("http://") || urlTextBox.Text.StartsWith("https://") ?
-                urlTextBox.Text : "http://" + urlTextBox.Text,
-                UriKind.Absolute, out uriResult) &&
-                (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);*/
+            return textbox.ForeColor == SystemColors.WindowText && textbox.Text.Length > 0;
         }
 
         private void titleTextBox_TextChanged(object sender, EventArgs e)
@@ -161,7 +155,7 @@ namespace Paperwallz
                 StartInfo =
                 {
                     FileName = "python",
-                    Arguments = "-W ignore " +
+                    Arguments = //"-W ignore " +
                                 "\"" + args.scriptLocation +
                                 "\" -t \"" + args.title +
                                 "\" -f \"" + args.file +
@@ -178,8 +172,35 @@ namespace Paperwallz
             string output = pyscript.StandardOutput.ReadToEnd();
             pyscript.WaitForExit();
 
-            if (output.Split('\n').All(line => !line.StartsWith("PEACEOUT")))
-                MessageBox.Show(output);
+            bool signedin = false;
+            bool uploaded = false;
+            bool submitted = false;
+            foreach (var line in output.Split('\n'))
+            {
+                if (line.Contains("SIGNEDIN"))
+                    signedin = true;
+
+                if (line.Contains("UPLOADED"))
+                    uploaded = true;
+
+                if (line.Contains("SUBMITTED"))
+                    submitted = true;
+            }
+
+            if (submitted)
+                return;
+
+            string error = "Unable to submit to /r/wallpapers. I don't know why :(";
+
+            if (!uploaded)
+            {
+                error = "Unable to upload to imgur.com. I don't know why :(";
+
+                if (!signedin)
+                    error = "Unable to log into Reddit. Wrong username/password combination, perhaps?";
+            }
+
+            MessageBox.Show(error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -191,7 +212,10 @@ namespace Paperwallz
 
         private void pasteButton_Click(object sender, EventArgs e)
         {
-            urlTextBox.Text = Clipboard.GetText(); //todo: add no text handle
+            if (!Clipboard.ContainsText())
+                return;
+
+            urlTextBox.Text = Clipboard.GetText();
             urlTextBox.ForeColor = SystemColors.WindowText;
             urlTextBox.SelectionStart = urlTextBox.Text.Length;
         }
@@ -199,7 +223,7 @@ namespace Paperwallz
         private void imageControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (imageControl.SelectedIndex == 0)
-                gotFile = IsUrlValid();
+                gotFile = HasText(urlTextBox);
             else
                 gotFile = openFileDialog.FileName != "";
 

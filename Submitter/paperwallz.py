@@ -32,12 +32,13 @@ description += ' | Uploader: /u/' + username
 #signing in
 r = praw.Reddit(user_agent = user_agent)
 r.login(username, password, disable_warning = True)
+print('SIGNEDIN')
 
 #uploading:
 image = ImgurClient(client_id, client_secret)
 upload = image.upload_from_url if fromurl else image.upload_from_path
 image = upload(file, config = { 'title': title, 'description': description }, anon = False)
-print('DONEWITHIMGUR')
+print('UPLOADED')
 
 #submitting:
-print('PEACEOUT ' + r.submit(subreddit, title + ' [' + str(image['width']) + '×' + str(image['height']) + ']', url = image['link']).permalink)
+print('SUBMITTED ' + r.submit(subreddit, title + ' [' + str(image['width']) + '×' + str(image['height']) + ']', url = image['link']).permalink)
