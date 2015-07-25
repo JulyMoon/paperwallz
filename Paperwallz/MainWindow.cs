@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -8,13 +9,15 @@ using System.Windows.Forms;
 
 namespace Paperwallz
 {
-    public partial class Window : Form
+    public partial class MainWindow : Form
     {
+        private readonly AboutWindow aboutWindow = new AboutWindow();
         private readonly string scriptLocation;
         private const string link = "https://www.reddit.com/r/wallpapers/new/";
         private bool gotUsername, gotPassword, gotFile, gotTitle, notInProcess = true;
+        private const int maxFilenameLength = 29;
 
-        public Window()
+        public MainWindow()
         {
             InitializeComponent();
             urlTextBox.Select();
@@ -97,8 +100,16 @@ namespace Paperwallz
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-                gotFile = true;
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            gotFile = true;
+
+            string filename = Path.GetFileName(openFileDialog.FileName);
+
+            // ReSharper disable once PossibleNullReferenceException
+            filenameLabel.Text = filename.Length > maxFilenameLength ?
+                filename.Substring(0, maxFilenameLength - 3) + "..." : filename;
         }
 
         private void TextBoxHandler(object sender, EventArgs e)
@@ -138,10 +149,10 @@ namespace Paperwallz
 
         private void aboutButton_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            aboutWindow.ShowDialog();
         }
 
-        private void backgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var args = (ScriptArgs)e.Argument;
 
@@ -171,7 +182,7 @@ namespace Paperwallz
                 MessageBox.Show(output);
         }
 
-        private void backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Text = "Paperwallz";
             notInProcess = true;
@@ -180,10 +191,9 @@ namespace Paperwallz
 
         private void pasteButton_Click(object sender, EventArgs e)
         {
-            urlTextBox.Text = Clipboard.GetText();
+            urlTextBox.Text = Clipboard.GetText(); //todo: add no text handle
             urlTextBox.ForeColor = SystemColors.WindowText;
             urlTextBox.SelectionStart = urlTextBox.Text.Length;
-            urlTextBox.ScrollToCaret();
         }
 
         private void imageControl_SelectedIndexChanged(object sender, EventArgs e)

@@ -1,11 +1,14 @@
-﻿namespace Paperwallz
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace Paperwallz
 {
-    partial class Window
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +31,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Window));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.submitButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.browseButton = new System.Windows.Forms.Button();
@@ -44,6 +47,7 @@
             this.imageControl = new System.Windows.Forms.TabControl();
             this.urlTab = new System.Windows.Forms.TabPage();
             this.pcTab = new System.Windows.Forms.TabPage();
+            this.filenameLabel = new System.Windows.Forms.Label();
             this.redditGroupBox.SuspendLayout();
             this.imageControl.SuspendLayout();
             this.urlTab.SuspendLayout();
@@ -72,7 +76,7 @@
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(72, 24);
             this.browseButton.TabIndex = 6;
-            this.browseButton.Text = "Browse...";
+            this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
             this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
             // 
@@ -211,6 +215,7 @@
             // pcTab
             // 
             this.pcTab.BackColor = System.Drawing.Color.White;
+            this.pcTab.Controls.Add(this.filenameLabel);
             this.pcTab.Controls.Add(this.browseButton);
             this.pcTab.Location = new System.Drawing.Point(4, 22);
             this.pcTab.Name = "pcTab";
@@ -219,7 +224,16 @@
             this.pcTab.TabIndex = 1;
             this.pcTab.Text = "Upload from this PC";
             // 
-            // Window
+            // filenameLabel
+            // 
+            this.filenameLabel.AutoSize = true;
+            this.filenameLabel.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.filenameLabel.Location = new System.Drawing.Point(79, 12);
+            this.filenameLabel.Name = "filenameLabel";
+            this.filenameLabel.Size = new System.Drawing.Size(0, 14);
+            this.filenameLabel.TabIndex = 7;
+            // 
+            // MainWindow
             // 
             this.AcceptButton = this.submitButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -235,7 +249,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Window";
+            this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paperwallz";
             this.redditGroupBox.ResumeLayout(false);
@@ -244,27 +258,29 @@
             this.urlTab.ResumeLayout(false);
             this.urlTab.PerformLayout();
             this.pcTab.ResumeLayout(false);
+            this.pcTab.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button submitButton;
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.Button browseButton;
-        private System.Windows.Forms.GroupBox redditGroupBox;
-        private System.Windows.Forms.TextBox passwordTextBox;
-        private System.Windows.Forms.TextBox loginTextBox;
-        private System.Windows.Forms.RichTextBox titleTextBox;
-        private System.Windows.Forms.TextBox urlTextBox;
-        private System.Windows.Forms.Button aboutButton;
-        private System.Windows.Forms.Button openButton;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.Button pasteButton;
-        private System.Windows.Forms.TabControl imageControl;
-        private System.Windows.Forms.TabPage urlTab;
-        private System.Windows.Forms.TabPage pcTab;
+        private Button submitButton;
+        private OpenFileDialog openFileDialog;
+        private Button browseButton;
+        private GroupBox redditGroupBox;
+        private TextBox passwordTextBox;
+        private TextBox loginTextBox;
+        private RichTextBox titleTextBox;
+        private TextBox urlTextBox;
+        private Button aboutButton;
+        private Button openButton;
+        private BackgroundWorker backgroundWorker;
+        private Button pasteButton;
+        private TabControl imageControl;
+        private TabPage urlTab;
+        private TabPage pcTab;
+        private Label filenameLabel;
     }
 }
 
