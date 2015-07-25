@@ -48,7 +48,6 @@ namespace Paperwallz
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
         {
-            urlRadioButton.Checked = true;
             gotFile = IsUrlValid();
             UpdateSubmitButton();
         }
@@ -76,8 +75,8 @@ namespace Paperwallz
             UpdateSubmitButton();
 
             backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
-                (urlRadioButton.Checked ? urlTextBox.Text : openFileDialog.FileName), loginTextBox.Text,
-                passwordTextBox.Text, urlRadioButton.Checked));
+                (imageControl.SelectedIndex == 0 ? urlTextBox.Text : openFileDialog.FileName), loginTextBox.Text,
+                passwordTextBox.Text, imageControl.SelectedIndex == 0));
         }
 
         private struct ScriptArgs
@@ -99,17 +98,7 @@ namespace Paperwallz
         private void browseButton_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
-                pcRadioButton.Checked = gotFile = true;
-        }
-
-        private void urlRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (urlRadioButton.Checked)
-                gotFile = IsUrlValid();
-            else
-                gotFile = openFileDialog.FileName != "";
-
-            UpdateSubmitButton();
+                gotFile = true;
         }
 
         private void TextBoxHandler(object sender, EventArgs e)
@@ -186,6 +175,24 @@ namespace Paperwallz
         {
             Text = "Paperwallz";
             notInProcess = true;
+            UpdateSubmitButton();
+        }
+
+        private void pasteButton_Click(object sender, EventArgs e)
+        {
+            urlTextBox.Text = Clipboard.GetText();
+            urlTextBox.ForeColor = SystemColors.WindowText;
+            urlTextBox.SelectionStart = urlTextBox.Text.Length;
+            urlTextBox.ScrollToCaret();
+        }
+
+        private void imageControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (imageControl.SelectedIndex == 0)
+                gotFile = IsUrlValid();
+            else
+                gotFile = openFileDialog.FileName != "";
+
             UpdateSubmitButton();
         }
     }
