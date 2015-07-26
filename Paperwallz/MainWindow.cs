@@ -218,6 +218,8 @@ namespace Paperwallz
             urlTextBox.Text = Clipboard.GetText();
             urlTextBox.ForeColor = SystemColors.WindowText;
             urlTextBox.SelectionStart = urlTextBox.Text.Length;
+
+            urlTextBox_TextChanged(new object(), new EventArgs());
         }
 
         private void imageControl_SelectedIndexChanged(object sender, EventArgs e)
