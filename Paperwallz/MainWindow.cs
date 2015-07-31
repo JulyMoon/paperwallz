@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Paperwallz
@@ -13,6 +15,8 @@ namespace Paperwallz
         private readonly AboutWindow aboutWindow = new AboutWindow();
         private readonly string scriptLocation;
         private const string link = "https://www.reddit.com/r/wallpapers/new/";
+        private readonly Regex wallhaven = new Regex(@"http://alpha.wallhaven.cc/wallpaper/\d+");
+        private readonly WebClient webClient = new WebClient();
         private bool gotUsername, gotPassword, gotFile, gotTitle, notInProcess = true;
         private const int maxFilenameLength = 29;
 
@@ -67,12 +71,26 @@ namespace Paperwallz
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            Text = "Paperwallz [Submitting]";
+            Text += " [Submitting]";
             notInProcess = false;
             UpdateSubmitButton();
 
+            string url = urlTextBox.Text;
+
+            if (wallhaven.IsMatch(url))
+            {
+                string contents = webClient.DownloadString(url);
+                int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
+                if (index != -1)
+                {
+                    index += 9;
+                    url = "http:" + contents.Substring(index, contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
+                    Text += " [W]";
+                }
+            }
+
             backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
-                (imageControl.SelectedIndex == 0 ? urlTextBox.Text : openFileDialog.FileName), loginTextBox.Text,
+                (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), loginTextBox.Text,
                 passwordTextBox.Text, imageControl.SelectedIndex == 0));
         }
 
