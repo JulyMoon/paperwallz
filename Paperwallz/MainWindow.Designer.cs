@@ -31,39 +31,50 @@ namespace Paperwallz
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "1",
+            "asd11",
+            "Salt",
+            "No"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            "2",
+            "Lmaokay",
+            "http://lmao.jpg",
+            "Yes"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this.submitButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.browseButton = new System.Windows.Forms.Button();
             this.urlTextBox = new System.Windows.Forms.TextBox();
             this.redditGroupBox = new System.Windows.Forms.GroupBox();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.loginTextBox = new System.Windows.Forms.TextBox();
+            this.openButton = new System.Windows.Forms.Button();
             this.titleTextBox = new System.Windows.Forms.RichTextBox();
             this.aboutButton = new System.Windows.Forms.Button();
-            this.openButton = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.pasteButton = new System.Windows.Forms.Button();
             this.imageControl = new System.Windows.Forms.TabControl();
             this.urlTab = new System.Windows.Forms.TabPage();
             this.pcTab = new System.Windows.Forms.TabPage();
             this.filenameLabel = new System.Windows.Forms.Label();
+            this.queueList = new System.Windows.Forms.ListView();
+            this.numberColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.titleColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fileColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.internetColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.addButton = new System.Windows.Forms.Button();
+            this.removeButton = new System.Windows.Forms.Button();
+            this.switchButton = new System.Windows.Forms.Button();
+            this.timer = new System.Windows.Forms.Timer(this.components);
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.descriptiveLabel = new System.Windows.Forms.Label();
+            this.timeLeftLabel = new System.Windows.Forms.Label();
             this.redditGroupBox.SuspendLayout();
             this.imageControl.SuspendLayout();
             this.urlTab.SuspendLayout();
             this.pcTab.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // submitButton
-            // 
-            this.submitButton.Enabled = false;
-            this.submitButton.Location = new System.Drawing.Point(90, 168);
-            this.submitButton.Name = "submitButton";
-            this.submitButton.Size = new System.Drawing.Size(142, 31);
-            this.submitButton.TabIndex = 9;
-            this.submitButton.Text = "Submit";
-            this.submitButton.UseVisualStyleBackColor = true;
-            this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
             // openFileDialog
             // 
@@ -136,6 +147,16 @@ namespace Paperwallz
             this.loginTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
             this.loginTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
             // 
+            // openButton
+            // 
+            this.openButton.Location = new System.Drawing.Point(90, 230);
+            this.openButton.Name = "openButton";
+            this.openButton.Size = new System.Drawing.Size(72, 27);
+            this.openButton.TabIndex = 10;
+            this.openButton.Text = "Open";
+            this.openButton.UseVisualStyleBackColor = true;
+            this.openButton.Click += new System.EventHandler(this.openButton_Click);
+            // 
             // titleTextBox
             // 
             this.titleTextBox.AccessibleName = "The title goes here";
@@ -156,23 +177,13 @@ namespace Paperwallz
             // 
             // aboutButton
             // 
-            this.aboutButton.Location = new System.Drawing.Point(12, 168);
+            this.aboutButton.Location = new System.Drawing.Point(12, 230);
             this.aboutButton.Name = "aboutButton";
-            this.aboutButton.Size = new System.Drawing.Size(72, 31);
+            this.aboutButton.Size = new System.Drawing.Size(72, 27);
             this.aboutButton.TabIndex = 8;
             this.aboutButton.Text = "About";
             this.aboutButton.UseVisualStyleBackColor = true;
             this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
-            // 
-            // openButton
-            // 
-            this.openButton.Location = new System.Drawing.Point(238, 168);
-            this.openButton.Name = "openButton";
-            this.openButton.Size = new System.Drawing.Size(72, 31);
-            this.openButton.TabIndex = 10;
-            this.openButton.Text = "Open";
-            this.openButton.UseVisualStyleBackColor = true;
-            this.openButton.Click += new System.EventHandler(this.openButton_Click);
             // 
             // backgroundWorker
             // 
@@ -233,15 +244,136 @@ namespace Paperwallz
             this.filenameLabel.Size = new System.Drawing.Size(0, 14);
             this.filenameLabel.TabIndex = 7;
             // 
+            // queueList
+            // 
+            this.queueList.Activation = System.Windows.Forms.ItemActivation.TwoClick;
+            this.queueList.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+            this.queueList.AllowColumnReorder = true;
+            this.queueList.AutoArrange = false;
+            this.queueList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.numberColumn,
+            this.titleColumn,
+            this.fileColumn,
+            this.internetColumn});
+            this.queueList.FullRowSelect = true;
+            this.queueList.GridLines = true;
+            this.queueList.HideSelection = false;
+            listViewItem2.StateImageIndex = 0;
+            this.queueList.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2});
+            this.queueList.LabelEdit = true;
+            this.queueList.Location = new System.Drawing.Point(316, 12);
+            this.queueList.MultiSelect = false;
+            this.queueList.Name = "queueList";
+            this.queueList.ShowGroups = false;
+            this.queueList.Size = new System.Drawing.Size(298, 245);
+            this.queueList.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.queueList.TabIndex = 13;
+            this.queueList.UseCompatibleStateImageBehavior = false;
+            this.queueList.View = System.Windows.Forms.View.Details;
+            this.queueList.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.queueList_ItemDrag);
+            this.queueList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.queueList_ItemSelectionChanged);
+            this.queueList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.queueList_MouseUp);
+            // 
+            // numberColumn
+            // 
+            this.numberColumn.Text = "#";
+            this.numberColumn.Width = 32;
+            // 
+            // titleColumn
+            // 
+            this.titleColumn.Text = "Title";
+            this.titleColumn.Width = 121;
+            // 
+            // fileColumn
+            // 
+            this.fileColumn.Text = "File";
+            this.fileColumn.Width = 93;
+            // 
+            // internetColumn
+            // 
+            this.internetColumn.Text = "Internet";
+            this.internetColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.internetColumn.Width = 48;
+            // 
+            // addButton
+            // 
+            this.addButton.Enabled = false;
+            this.addButton.Location = new System.Drawing.Point(129, 168);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(181, 27);
+            this.addButton.TabIndex = 14;
+            this.addButton.Text = "Add";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // removeButton
+            // 
+            this.removeButton.Enabled = false;
+            this.removeButton.Location = new System.Drawing.Point(12, 168);
+            this.removeButton.Name = "removeButton";
+            this.removeButton.Size = new System.Drawing.Size(111, 27);
+            this.removeButton.TabIndex = 15;
+            this.removeButton.Text = "Remove";
+            this.removeButton.UseVisualStyleBackColor = true;
+            this.removeButton.Click += new System.EventHandler(this.removeButton_Click);
+            // 
+            // switchButton
+            // 
+            this.switchButton.Enabled = false;
+            this.switchButton.Location = new System.Drawing.Point(168, 230);
+            this.switchButton.Name = "switchButton";
+            this.switchButton.Size = new System.Drawing.Size(142, 27);
+            this.switchButton.TabIndex = 16;
+            this.switchButton.Text = "Start";
+            this.switchButton.UseVisualStyleBackColor = true;
+            this.switchButton.Click += new System.EventHandler(this.switchButton_Click);
+            // 
+            // timer
+            // 
+            this.timer.Interval = 1000;
+            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(12, 201);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(298, 10);
+            this.progressBar.TabIndex = 17;
+            // 
+            // descriptiveLabel
+            // 
+            this.descriptiveLabel.AutoSize = true;
+            this.descriptiveLabel.Location = new System.Drawing.Point(9, 214);
+            this.descriptiveLabel.Name = "descriptiveLabel";
+            this.descriptiveLabel.Size = new System.Drawing.Size(149, 13);
+            this.descriptiveLabel.TabIndex = 18;
+            this.descriptiveLabel.Text = "Time left until next submission:";
+            // 
+            // timeLeftLabel
+            // 
+            this.timeLeftLabel.AutoSize = true;
+            this.timeLeftLabel.Location = new System.Drawing.Point(261, 214);
+            this.timeLeftLabel.Name = "timeLeftLabel";
+            this.timeLeftLabel.Size = new System.Drawing.Size(49, 13);
+            this.timeLeftLabel.TabIndex = 19;
+            this.timeLeftLabel.Text = "00:00:00";
+            // 
             // MainWindow
             // 
-            this.AcceptButton = this.submitButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(322, 211);
-            this.Controls.Add(this.imageControl);
-            this.Controls.Add(this.submitButton);
+            this.ClientSize = new System.Drawing.Size(626, 269);
+            this.Controls.Add(this.timeLeftLabel);
+            this.Controls.Add(this.descriptiveLabel);
             this.Controls.Add(this.openButton);
+            this.Controls.Add(this.progressBar);
+            this.Controls.Add(this.switchButton);
+            this.Controls.Add(this.removeButton);
+            this.Controls.Add(this.addButton);
+            this.Controls.Add(this.queueList);
+            this.Controls.Add(this.imageControl);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.redditGroupBox);
@@ -251,7 +383,7 @@ namespace Paperwallz
             this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Paperwallz";
+            this.Text = "Paperwallz [OFF]";
             this.redditGroupBox.ResumeLayout(false);
             this.redditGroupBox.PerformLayout();
             this.imageControl.ResumeLayout(false);
@@ -260,12 +392,12 @@ namespace Paperwallz
             this.pcTab.ResumeLayout(false);
             this.pcTab.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private Button submitButton;
         private OpenFileDialog openFileDialog;
         private Button browseButton;
         private GroupBox redditGroupBox;
@@ -281,6 +413,18 @@ namespace Paperwallz
         private TabPage urlTab;
         private TabPage pcTab;
         private Label filenameLabel;
+        private ListView queueList;
+        private ColumnHeader numberColumn;
+        private ColumnHeader titleColumn;
+        private ColumnHeader fileColumn;
+        private ColumnHeader internetColumn;
+        private Button addButton;
+        private Button removeButton;
+        private Button switchButton;
+        private Timer timer;
+        private ProgressBar progressBar;
+        private Label descriptiveLabel;
+        private Label timeLeftLabel;
     }
 }
 

@@ -15,10 +15,14 @@ namespace Paperwallz
         private readonly AboutWindow aboutWindow = new AboutWindow();
         private readonly string scriptLocation;
         private const string link = "https://www.reddit.com/r/wallpapers/new/";
-        private readonly Regex wallhaven = new Regex(@"http://alpha.wallhaven.cc/wallpaper/\d+");
         private readonly WebClient webClient = new WebClient();
-        private bool gotUsername, gotPassword, gotFile, gotTitle, notInProcess = true;
+        private bool gotUsername, gotPassword, gotFile, gotTitle;
         private const int maxFilenameLength = 29;
+        private int selectedIndex = -1;
+        private bool dragging;
+        private TimeSpan timeLeft = TimeSpan.Zero;
+        private bool submitting;
+        private bool wallhaven;
 
         public MainWindow()
         {
@@ -35,63 +39,53 @@ namespace Paperwallz
             }
         }
 
-        private void UpdateSubmitButton()
+        private void UpdateAddButton()
         {
-            submitButton.Enabled = gotUsername && gotPassword && gotFile && gotTitle && notInProcess;
+            addButton.Enabled = gotFile && gotTitle;
         }
 
         private void loginTextBox_TextChanged(object sender, EventArgs e)
         {
             gotUsername = HasText(loginTextBox);
-            UpdateSubmitButton();
+            UpdateSwitch();
         }
 
         private void passwordTextBox_TextChanged(object sender, EventArgs e)
         {
             gotPassword = HasText(passwordTextBox);
-            UpdateSubmitButton();
+            UpdateSwitch();
+        }
+
+        private void UpdateSwitch()
+        {
+            switchButton.Enabled = gotUsername && gotPassword;
         }
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
         {
             gotFile = HasText(urlTextBox);
-            UpdateSubmitButton();
+            UpdateAddButton();
+        }
+
+        private void titleTextBox_TextChanged(object sender, EventArgs e)
+        {
+            gotTitle = HasText(titleTextBox);
+            UpdateAddButton();
+        }
+
+        private void imageControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (imageControl.SelectedIndex == 0)
+                gotFile = HasText(urlTextBox);
+            else
+                gotFile = openFileDialog.FileName != "";
+
+            UpdateAddButton();
         }
 
         private static bool HasText(TextBoxBase textbox)
         {
             return textbox.ForeColor == SystemColors.WindowText && textbox.Text.Length > 0;
-        }
-
-        private void titleTextBox_TextChanged(object sender, EventArgs e)
-        {
-            gotTitle = titleTextBox.ForeColor == SystemColors.WindowText && titleTextBox.Text.Length > 0;
-            UpdateSubmitButton();
-        }
-
-        private void submitButton_Click(object sender, EventArgs e)
-        {
-            Text += " [Submitting]";
-            notInProcess = false;
-            UpdateSubmitButton();
-
-            string url = urlTextBox.Text;
-
-            if (wallhaven.IsMatch(url))
-            {
-                string contents = webClient.DownloadString(url);
-                int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
-                if (index != -1)
-                {
-                    index += 9;
-                    url = "http:" + contents.Substring(index, contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
-                    Text += " [W]";
-                }
-            }
-
-            backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
-                (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), loginTextBox.Text,
-                passwordTextBox.Text, imageControl.SelectedIndex == 0));
         }
 
         private struct ScriptArgs
@@ -127,8 +121,8 @@ namespace Paperwallz
         private void TextBoxHandler(object sender, EventArgs e)
         {
             var textbox = (TextBoxBase)sender;
-            
-            if (ActiveControl == textbox)
+
+            if (ActiveControl == textbox) //maybe just separate TextBoxHandler into 2 methods?
             {
                 if (textbox.ForeColor == SystemColors.GrayText)
                 {
@@ -136,8 +130,8 @@ namespace Paperwallz
                     textbox.Text = "";
                 }
                 else
-                    //SelectAll doesnt work without this
-                    BeginInvoke((Action)delegate { textbox.SelectAll(); });
+                    //SelectAll doesnt work without this //BeginInvoke((Action)textbox.SelectAll); maybe?
+                    BeginInvoke((Action)delegate { textbox.SelectAll(); }); 
             }
             else if (textbox.Text == "")
             {
@@ -205,6 +199,8 @@ namespace Paperwallz
                     submitted = true;
             }
 
+            e.Result = "Noice";
+
             if (submitted)
                 return;
 
@@ -218,14 +214,22 @@ namespace Paperwallz
                     error = "Unable to log into Reddit. Wrong username/password combination, perhaps?";
             }
 
-            MessageBox.Show(error, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            e.Result = error;
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Text = "Paperwallz";
-            notInProcess = true;
-            UpdateSubmitButton();
+            submitting = false;
+            wallhaven = false;
+
+            string result = (string)e.Result;
+            if (result != "Noice")
+            {
+                SwitchPosting(false);
+                MessageBox.Show(result, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+                UpdateTitle(true);
         }
 
         private void pasteButton_Click(object sender, EventArgs e)
@@ -240,14 +244,130 @@ namespace Paperwallz
             urlTextBox_TextChanged(new object(), new EventArgs());
         }
 
-        private void imageControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void queueList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (imageControl.SelectedIndex == 0)
-                gotFile = HasText(urlTextBox);
-            else
-                gotFile = openFileDialog.FileName != "";
+            removeButton.Enabled = e.IsSelected;
+            selectedIndex = e.IsSelected ? e.ItemIndex : -1;
+        }
 
-            UpdateSubmitButton();
+        private void removeButton_Click(object sender, EventArgs e)
+        {
+            queueList.Items.RemoveAt(selectedIndex);
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            queueList.Items.Add(new ListViewItem(new[]
+                {
+                    (queueList.Items.Count + 1).ToString(),
+                    titleTextBox.Text,
+                    imageControl.SelectedIndex == 0 ? urlTextBox.Text : openFileDialog.FileName,
+                    imageControl.SelectedIndex == 0 ? "Yes" : "No"
+                }));
+        }
+
+        private void Swap(int a, int b)
+        {
+            if (a < 0 || b < 0 || a == b)
+                return;
+
+            for (int i = 1; i < queueList.Items[a].SubItems.Count; i++)
+            {
+                var temp = queueList.Items[a].SubItems[i].Text;
+                queueList.Items[a].SubItems[i].Text = queueList.Items[b].SubItems[i].Text;
+                queueList.Items[b].SubItems[i].Text = temp;
+            }
+        }
+
+        private void queueList_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            dragging = true;
+        }
+
+        private void queueList_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!dragging)
+                return;
+
+            dragging = false;
+
+            Swap(queueList.Items.IndexOf(queueList.HitTest(e.X, e.Y).Item), selectedIndex);
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (timeLeft > TimeSpan.Zero)
+            {
+                timeLeft -= TimeSpan.FromMilliseconds(timer.Interval);
+            }
+            else
+            {
+                timeLeft = TimeSpan.FromMinutes(1);
+
+                submitting = true;
+                UpdateTitle(false);
+
+                string url = urlTextBox.Text;
+
+                if (imageControl.SelectedIndex == 0 && Regex.IsMatch(url, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
+                {
+                    string contents = webClient.DownloadString(url);
+                    int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
+                    if (index != -1)
+                    {
+                        index += 9;
+                        url = "http:" + contents.Substring(index, contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
+                        wallhaven = true;
+                        UpdateTitle(false);
+                    }
+                }
+
+                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
+                    (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), loginTextBox.Text,
+                    passwordTextBox.Text, imageControl.SelectedIndex == 0));
+            }
+
+            UpdateTime();
+        }
+
+        private void UpdateTime()
+        {
+            timeLeftLabel.Text = timeLeft.ToString();
+            progressBar.Value = (int)((1 - ((double)timeLeft.Ticks / TimeSpan.FromMinutes(1).Ticks)) * 100);
+        }
+
+        private void switchButton_Click(object sender, EventArgs e)
+        {
+            SwitchPosting(!timer.Enabled);
+        }
+
+        private void UpdateTitle(bool updateSwitch)
+        {
+            if (updateSwitch)
+                switchButton.Text = timer.Enabled ? "Stop" : "Start";
+
+            Text = Application.ProductName +
+                   (timer.Enabled ? " [ON]" : " [OFF]") +
+                   (submitting ? " [Submitting]" : "") +
+                   (wallhaven ? " [W]" : "");
+        }
+
+        private void SwitchPosting(bool start)
+        {
+            if (start)
+            {
+                loginTextBox.ReadOnly = true;
+                passwordTextBox.ReadOnly = true;
+                timer.Start();
+            }
+            else
+            {
+                timer.Stop();
+                loginTextBox.ReadOnly = false;
+                passwordTextBox.ReadOnly = false;
+            }
+
+            UpdateTitle(true);
         }
     }
 }
