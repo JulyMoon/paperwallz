@@ -13,10 +13,11 @@ namespace Paperwallz
     public partial class MainWindow : Form
     {
         private readonly AboutWindow aboutWindow = new AboutWindow();
+        private readonly SettingsWindow settingsWindow = new SettingsWindow();
         private readonly string scriptLocation;
         private const string link = "https://www.reddit.com/r/wallpapers/new/";
         private readonly WebClient webClient = new WebClient();
-        private bool gotUsername, gotPassword, gotFile, gotTitle;
+        private bool gotFile, gotTitle;
         private const int maxFilenameLength = 29;
         private int selectedIndex = -1;
         private bool dragging;
@@ -44,21 +45,9 @@ namespace Paperwallz
             addButton.Enabled = gotFile && gotTitle;
         }
 
-        private void loginTextBox_TextChanged(object sender, EventArgs e)
+        public void UpdateSwitch(bool enabled)
         {
-            gotUsername = HasText(loginTextBox);
-            UpdateSwitch();
-        }
-
-        private void passwordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            gotPassword = HasText(passwordTextBox);
-            UpdateSwitch();
-        }
-
-        private void UpdateSwitch()
-        {
-            switchButton.Enabled = gotUsername && gotPassword;
+            switchButton.Enabled = enabled;
         }
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
@@ -83,7 +72,7 @@ namespace Paperwallz
             UpdateAddButton();
         }
 
-        private static bool HasText(TextBoxBase textbox)
+        public static bool HasText(TextBoxBase textbox)
         {
             return textbox.ForeColor == SystemColors.WindowText && textbox.Text.Length > 0;
         }
@@ -140,17 +129,17 @@ namespace Paperwallz
             }
         }
 
-        private void openButton_Click(object sender, EventArgs e)
-        {
-            Process.Start(link);
-        }
-
         private void TextBoxSelector(object sender, MouseEventArgs e)
         {
             var textbox = (TextBoxBase)sender;
 
             if (textbox.SelectionLength == 0)
                 textbox.SelectAll();
+        }
+
+        private void openButton_Click(object sender, EventArgs e)
+        {
+            Process.Start(link);
         }
 
         private void aboutButton_Click(object sender, EventArgs e)
@@ -323,8 +312,8 @@ namespace Paperwallz
                 }
 
                 backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
-                    (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), loginTextBox.Text,
-                    passwordTextBox.Text, imageControl.SelectedIndex == 0));
+                    (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), settingsWindow.usernameTextBox.Text,
+                    settingsWindow.passwordTextBox.Text, imageControl.SelectedIndex == 0));
             }
 
             UpdateTime();
@@ -356,18 +345,24 @@ namespace Paperwallz
         {
             if (start)
             {
-                loginTextBox.ReadOnly = true;
-                passwordTextBox.ReadOnly = true;
+                settingsWindow.usernameTextBox.ReadOnly = true;
+                settingsWindow.passwordTextBox.ReadOnly = true;
                 timer.Start();
             }
             else
             {
                 timer.Stop();
-                loginTextBox.ReadOnly = false;
-                passwordTextBox.ReadOnly = false;
+                settingsWindow.usernameTextBox.ReadOnly = false;
+                settingsWindow.passwordTextBox.ReadOnly = false;
             }
 
             UpdateTitle(true);
+        }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+            var asd = settingsWindow.ShowDialog();
+            Debug.WriteLine("Result: " + asd);
         }
     }
 }
