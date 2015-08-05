@@ -287,9 +287,7 @@ namespace Paperwallz
         private void timer_Tick(object sender, EventArgs e)
         {
             if (timeLeft > TimeSpan.Zero)
-            {
                 timeLeft -= TimeSpan.FromMilliseconds(timer.Interval);
-            }
             else
             {
                 timeLeft = maxTime;
@@ -313,8 +311,8 @@ namespace Paperwallz
                 }
 
                 backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
-                    (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), settingsWindow.usernameTextBox.Text,
-                    settingsWindow.passwordTextBox.Text, imageControl.SelectedIndex == 0));
+                    (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), settingsWindow.Username,
+                    settingsWindow.Password, imageControl.SelectedIndex == 0));
             }
 
             UpdateTime();
@@ -323,7 +321,8 @@ namespace Paperwallz
         private void UpdateTime()
         {
             timeLeftLabel.Text = timeLeft.ToString();
-            progressBar.Value = (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
+            progressBar.Value = 100 - (int)(((double)timeLeft.Ticks / maxTime.Ticks) * 100);
+                              //(int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
         }
 
         private void switchButton_Click(object sender, EventArgs e)
@@ -346,15 +345,13 @@ namespace Paperwallz
         {
             if (start)
             {
-                settingsWindow.usernameTextBox.ReadOnly = true;
-                settingsWindow.passwordTextBox.ReadOnly = true;
+                settingsWindow.SetReadOnly(true);
                 timer.Start();
             }
             else
             {
                 timer.Stop();
-                settingsWindow.usernameTextBox.ReadOnly = false;
-                settingsWindow.passwordTextBox.ReadOnly = false;
+                settingsWindow.SetReadOnly(false);
             }
 
             UpdateTitle(true);
@@ -363,8 +360,8 @@ namespace Paperwallz
         private void settingsButton_Click(object sender, EventArgs e)
         {
             settingsWindow.ShowDialog();
-            switchButton.Enabled = settingsWindow.gotUsername && settingsWindow.gotPassword;
-            maxTime = settingsWindow.timespan;
+            switchButton.Enabled = settingsWindow.GotUsername && settingsWindow.GotPassword;
+            maxTime = settingsWindow.Timespan;
         }
     }
 }

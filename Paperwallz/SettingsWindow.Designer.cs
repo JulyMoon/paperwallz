@@ -293,10 +293,10 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button applyButton;
-        public System.Windows.Forms.TextBox usernameTextBox;
-        public System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Label secondsLabel;
         private System.Windows.Forms.Label minutesLabel;
         private System.Windows.Forms.Label warningLabel;
+        private System.Windows.Forms.TextBox usernameTextBox;
+        private System.Windows.Forms.TextBox passwordTextBox;
     }
 }

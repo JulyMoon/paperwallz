@@ -7,11 +7,14 @@ namespace Paperwallz
 {
     public partial class SettingsWindow : Form
     {
-        public bool gotUsername, gotPassword;
+        public bool GotUsername, GotPassword;
         private decimal oldHours, oldMinutes, oldSeconds;
         private string oldUsername, oldPassword;
-        public TimeSpan timespan;
+        public TimeSpan Timespan;
         private static readonly TimeSpan minimum = TimeSpan.FromSeconds(20);
+
+        public string Username { get { return usernameTextBox.Text; } }
+        public string Password { get { return passwordTextBox.Text; } }
 
         public SettingsWindow()
         {
@@ -108,6 +111,36 @@ namespace Paperwallz
             UpdateApply();
         }
 
+        public void SetReadOnly(bool enabled)
+        {
+            if (enabled)
+            {
+                usernameTextBox.ReadOnly = true;
+                passwordTextBox.ReadOnly = true;
+
+                hoursNumeric.ReadOnly = true;
+                minutesNumeric.ReadOnly = true;
+                secondsNumeric.ReadOnly = true;
+
+                hoursNumeric.Increment = 0;
+                minutesNumeric.Increment = 0;
+                secondsNumeric.Increment = 0;
+            }
+            else
+            {
+                usernameTextBox.ReadOnly = false;
+                passwordTextBox.ReadOnly = false;
+
+                hoursNumeric.ReadOnly = false;
+                minutesNumeric.ReadOnly = false;
+                secondsNumeric.ReadOnly = false;
+
+                hoursNumeric.Increment = 1;
+                minutesNumeric.Increment = 1;
+                secondsNumeric.Increment = 1;
+            }
+        }
+
         private void SettingsWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (DialogResult == DialogResult.Cancel)
@@ -119,18 +152,18 @@ namespace Paperwallz
                 SetText(passwordTextBox, oldPassword);
             }
 
-            timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
-            if (timespan < minimum)
+            Timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
+            if (Timespan < minimum)
             {
-                timespan = minimum;
+                Timespan = minimum;
 
-                hoursNumeric.Value = oldHours = timespan.Hours;
-                minutesNumeric.Value = oldMinutes = timespan.Minutes;
-                secondsNumeric.Value = oldSeconds = timespan.Seconds;
+                hoursNumeric.Value = oldHours = Timespan.Hours;
+                minutesNumeric.Value = oldMinutes = Timespan.Minutes;
+                secondsNumeric.Value = oldSeconds = Timespan.Seconds;
             }
 
-            gotUsername = MainWindow.HasText(usernameTextBox);
-            gotPassword = MainWindow.HasText(passwordTextBox);
+            GotUsername = MainWindow.HasText(usernameTextBox);
+            GotPassword = MainWindow.HasText(passwordTextBox);
         }
 
         private void applyButton_Click(object sender, EventArgs e)
