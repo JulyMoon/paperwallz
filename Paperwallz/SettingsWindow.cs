@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,52 +11,43 @@ namespace Paperwallz
         private decimal oldHours, oldMinutes, oldSeconds;
         private string oldUsername, oldPassword;
         public TimeSpan timespan;
-        //private readonly MainWindow mw;
+        private static readonly TimeSpan minimum = TimeSpan.FromSeconds(20);
 
         public SettingsWindow()
         {
             InitializeComponent();
-            //mw = (MainWindow)Parent;
-
-            timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
         }
 
-        private void usernameTextBox_TextChanged(object sender, EventArgs e)
+        private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            gotUsername = MainWindow.HasText(usernameTextBox);
             UpdateApply();
         }
 
-        private void passwordTextBox_TextChanged(object sender, EventArgs e)
+        private void TextBox_Enter(object sender, EventArgs e)
         {
-            gotPassword = MainWindow.HasText(passwordTextBox);
-            UpdateApply();
-        }
-
-        private void TextBoxHandler(object sender, EventArgs e)
-        { // WARNING: THIS METHOD WAS COPY-PASTED
             var textbox = (TextBoxBase)sender;
 
-            if (ActiveControl == textbox) //maybe just separate TextBoxHandler into 2 methods?
+            if (textbox.ForeColor == SystemColors.GrayText)
             {
-                if (textbox.ForeColor == SystemColors.GrayText)
-                {
-                    textbox.ForeColor = SystemColors.WindowText;
-                    textbox.Text = "";
-                }
-                else
-                    //BeginInvoke((Action)textbox.SelectAll); maybe?
-                    BeginInvoke((Action)delegate { textbox.SelectAll(); });
+                textbox.ForeColor = SystemColors.WindowText;
+                textbox.Text = "";
             }
-            else if (textbox.Text == "")
+            else
             {
-                textbox.ForeColor = SystemColors.GrayText;
-                textbox.Text = textbox.AccessibleName;
-            }
+                BeginInvoke((Action)textbox.SelectAll);
+            } 
+        }
+
+        private void TextBox_Leave(object sender, EventArgs e)
+        {
+            var textbox = (TextBoxBase)sender;
+
+            SetText(textbox, textbox.Text);
         }
 
         private void TextBoxSelector(object sender, MouseEventArgs e)
-        { // WARNING: THIS METHOD WAS COPY-PASTED
+        {
+            //Debug.WriteLine("CLICK");
             var textbox = (TextBoxBase)sender;
 
             if (textbox.SelectionLength == 0)
@@ -93,6 +85,12 @@ namespace Paperwallz
         private void SettingsWindow_Shown(object sender, EventArgs e)
         {
             Apply();
+
+            var textbox = ActiveControl as TextBoxBase;
+            if (textbox == null || MainWindow.HasText(textbox))
+                return;
+
+            TextBox_Enter(textbox, new EventArgs());
         }
 
         private void Apply()
@@ -112,14 +110,27 @@ namespace Paperwallz
 
         private void SettingsWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (DialogResult != DialogResult.Cancel)
-                return;
+            if (DialogResult == DialogResult.Cancel)
+            {
+                hoursNumeric.Value = oldHours;
+                minutesNumeric.Value = oldMinutes;
+                secondsNumeric.Value = oldSeconds;
+                SetText(usernameTextBox, oldUsername);
+                SetText(passwordTextBox, oldPassword);
+            }
 
-            hoursNumeric.Value = oldHours;
-            minutesNumeric.Value = oldMinutes;
-            secondsNumeric.Value = oldSeconds;
-            SetText(usernameTextBox, oldUsername);
-            SetText(passwordTextBox, oldPassword);
+            timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
+            if (timespan < minimum)
+            {
+                timespan = minimum;
+
+                hoursNumeric.Value = oldHours = timespan.Hours;
+                minutesNumeric.Value = oldMinutes = timespan.Minutes;
+                secondsNumeric.Value = oldSeconds = timespan.Seconds;
+            }
+
+            gotUsername = MainWindow.HasText(usernameTextBox);
+            gotPassword = MainWindow.HasText(passwordTextBox);
         }
 
         private void applyButton_Click(object sender, EventArgs e)

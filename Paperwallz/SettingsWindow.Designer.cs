@@ -33,6 +33,9 @@
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.timeGroupBox = new System.Windows.Forms.GroupBox();
+            this.warningLabel = new System.Windows.Forms.Label();
+            this.secondsLabel = new System.Windows.Forms.Label();
+            this.minutesLabel = new System.Windows.Forms.Label();
             this.hoursLabel = new System.Windows.Forms.Label();
             this.semicolonLabel2 = new System.Windows.Forms.Label();
             this.semicolonLabel1 = new System.Windows.Forms.Label();
@@ -42,9 +45,6 @@
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.applyButton = new System.Windows.Forms.Button();
-            this.minutesLabel = new System.Windows.Forms.Label();
-            this.secondsLabel = new System.Windows.Forms.Label();
-            this.warningLabel = new System.Windows.Forms.Label();
             this.redditGroupBox.SuspendLayout();
             this.timeGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secondsNumeric)).BeginInit();
@@ -75,9 +75,9 @@
             this.passwordTextBox.Text = "Password";
             this.passwordTextBox.UseSystemPasswordChar = true;
             this.passwordTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
-            this.passwordTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
-            this.passwordTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
+            this.passwordTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.passwordTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
+            this.passwordTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // usernameTextBox
             // 
@@ -90,9 +90,9 @@
             this.usernameTextBox.TabIndex = 1;
             this.usernameTextBox.Text = "Username";
             this.usernameTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.usernameTextBox.TextChanged += new System.EventHandler(this.usernameTextBox_TextChanged);
-            this.usernameTextBox.Enter += new System.EventHandler(this.TextBoxHandler);
-            this.usernameTextBox.Leave += new System.EventHandler(this.TextBoxHandler);
+            this.usernameTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            this.usernameTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
+            this.usernameTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // timeGroupBox
             // 
@@ -111,6 +111,35 @@
             this.timeGroupBox.TabIndex = 1;
             this.timeGroupBox.TabStop = false;
             this.timeGroupBox.Text = "Time between submissions";
+            // 
+            // warningLabel
+            // 
+            this.warningLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.warningLabel.Location = new System.Drawing.Point(6, 61);
+            this.warningLabel.Name = "warningLabel";
+            this.warningLabel.Size = new System.Drawing.Size(206, 46);
+            this.warningLabel.TabIndex = 8;
+            this.warningLabel.Text = "Flooding /r/wallpapers might get you banned from the subreddit so I don\'t recomme" +
+    "nd values less than 1 hour";
+            this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // secondsLabel
+            // 
+            this.secondsLabel.AutoSize = true;
+            this.secondsLabel.Location = new System.Drawing.Point(163, 42);
+            this.secondsLabel.Name = "secondsLabel";
+            this.secondsLabel.Size = new System.Drawing.Size(49, 13);
+            this.secondsLabel.TabIndex = 7;
+            this.secondsLabel.Text = "Seconds";
+            // 
+            // minutesLabel
+            // 
+            this.minutesLabel.AutoSize = true;
+            this.minutesLabel.Location = new System.Drawing.Point(88, 42);
+            this.minutesLabel.Name = "minutesLabel";
+            this.minutesLabel.Size = new System.Drawing.Size(44, 13);
+            this.minutesLabel.TabIndex = 6;
+            this.minutesLabel.Text = "Minutes";
             // 
             // hoursLabel
             // 
@@ -218,35 +247,6 @@
             this.applyButton.Text = "Apply";
             this.applyButton.UseVisualStyleBackColor = true;
             this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
-            // 
-            // minutesLabel
-            // 
-            this.minutesLabel.AutoSize = true;
-            this.minutesLabel.Location = new System.Drawing.Point(88, 42);
-            this.minutesLabel.Name = "minutesLabel";
-            this.minutesLabel.Size = new System.Drawing.Size(44, 13);
-            this.minutesLabel.TabIndex = 6;
-            this.minutesLabel.Text = "Minutes";
-            // 
-            // secondsLabel
-            // 
-            this.secondsLabel.AutoSize = true;
-            this.secondsLabel.Location = new System.Drawing.Point(163, 42);
-            this.secondsLabel.Name = "secondsLabel";
-            this.secondsLabel.Size = new System.Drawing.Size(49, 13);
-            this.secondsLabel.TabIndex = 7;
-            this.secondsLabel.Text = "Seconds";
-            // 
-            // warningLabel
-            // 
-            this.warningLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.warningLabel.Location = new System.Drawing.Point(6, 61);
-            this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(206, 46);
-            this.warningLabel.TabIndex = 8;
-            this.warningLabel.Text = "Flooding /r/wallpapers might get you banned from the subreddit so I don\'t recomme" +
-    "nd values less than 1 hour";
-            this.warningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SettingsWindow
             // 

@@ -22,6 +22,7 @@ namespace Paperwallz
         private int selectedIndex = -1;
         private bool dragging;
         private TimeSpan timeLeft = TimeSpan.Zero;
+        private TimeSpan maxTime;
         private bool submitting;
         private bool wallhaven;
 
@@ -291,7 +292,7 @@ namespace Paperwallz
             }
             else
             {
-                timeLeft = TimeSpan.FromMinutes(1);
+                timeLeft = maxTime;
 
                 submitting = true;
                 UpdateTitle(false);
@@ -322,7 +323,7 @@ namespace Paperwallz
         private void UpdateTime()
         {
             timeLeftLabel.Text = timeLeft.ToString();
-            progressBar.Value = (int)((1 - ((double)timeLeft.Ticks / TimeSpan.FromMinutes(1).Ticks)) * 100);
+            progressBar.Value = (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
         }
 
         private void switchButton_Click(object sender, EventArgs e)
@@ -361,8 +362,9 @@ namespace Paperwallz
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
-            var asd = settingsWindow.ShowDialog();
-            Debug.WriteLine("Result: " + asd);
+            settingsWindow.ShowDialog();
+            switchButton.Enabled = settingsWindow.gotUsername && settingsWindow.gotPassword;
+            maxTime = settingsWindow.timespan;
         }
     }
 }
