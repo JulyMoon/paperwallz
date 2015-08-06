@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -36,9 +35,7 @@ namespace Paperwallz
                 textbox.Text = "";
             }
             else
-            {
                 BeginInvoke((Action)textbox.SelectAll);
-            } 
         }
 
         private void TextBox_Leave(object sender, EventArgs e)
@@ -62,7 +59,7 @@ namespace Paperwallz
             return MainWindow.HasText(textbox) ? textbox.Text : "";
         }
 
-        private static void SetText(TextBoxBase textbox, string text)
+        public static void SetText(TextBoxBase textbox, string text)
         {
             if (text == "")
             {

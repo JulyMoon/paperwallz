@@ -26,7 +26,7 @@ namespace Paperwallz
         private bool submitting;
         private bool wallhaven;
 
-        public MainWindow()
+        public MainWindow() //TODO: add config file
         {
             InitializeComponent();
             urlTextBox.Select();
@@ -108,26 +108,24 @@ namespace Paperwallz
                 filename.Substring(0, maxFilenameLength - 3) + "..." : filename;
         }
 
-        private void TextBoxHandler(object sender, EventArgs e)
+        private void TextBox_Enter(object sender, EventArgs e)
         {
             var textbox = (TextBoxBase)sender;
 
-            if (ActiveControl == textbox) //maybe just separate TextBoxHandler into 2 methods?
+            if (textbox.ForeColor == SystemColors.GrayText)
             {
-                if (textbox.ForeColor == SystemColors.GrayText)
-                {
-                    textbox.ForeColor = SystemColors.WindowText;
-                    textbox.Text = "";
-                }
-                else
-                    //SelectAll doesnt work without this //BeginInvoke((Action)textbox.SelectAll); maybe?
-                    BeginInvoke((Action)delegate { textbox.SelectAll(); }); 
+                textbox.ForeColor = SystemColors.WindowText;
+                textbox.Text = "";
             }
-            else if (textbox.Text == "")
-            {
-                textbox.ForeColor = SystemColors.GrayText;
-                textbox.Text = textbox.AccessibleName;
-            }
+            else
+                BeginInvoke((Action)textbox.SelectAll);
+        }
+
+        private void TextBox_Leave(object sender, EventArgs e)
+        {
+            var textbox = (TextBoxBase)sender;
+
+            SettingsWindow.SetText(textbox, textbox.Text);
         }
 
         private void TextBoxSelector(object sender, MouseEventArgs e)
