@@ -9,11 +9,32 @@ namespace Paperwallz
         public bool GotUsername, GotPassword;
         private decimal oldHours, oldMinutes, oldSeconds;
         private string oldUsername, oldPassword;
-        public TimeSpan Timespan;
+        private TimeSpan timespan;
         private static readonly TimeSpan minimum = TimeSpan.FromSeconds(20);
 
-        public string Username { get { return usernameTextBox.Text; } }
-        public string Password { get { return passwordTextBox.Text; } }
+        public string Username
+        {
+            get { return GetText(usernameTextBox); }
+            set { SetText(usernameTextBox, value); }
+        }
+
+        public string Password
+        {
+            get { return GetText(passwordTextBox); }
+            set { SetText(passwordTextBox, value); }
+        }
+
+        public TimeSpan Timespan
+        {
+            get { return timespan; }
+            set
+            {
+                timespan = value;
+                hoursNumeric.Value = oldHours = timespan.Hours;
+                minutesNumeric.Value = oldMinutes = timespan.Minutes;
+                secondsNumeric.Value = oldSeconds = timespan.Seconds;
+            }
+        }
 
         public SettingsWindow()
         {
@@ -47,7 +68,6 @@ namespace Paperwallz
 
         private void TextBoxSelector(object sender, MouseEventArgs e)
         {
-            //Debug.WriteLine("CLICK");
             var textbox = (TextBoxBase)sender;
 
             if (textbox.SelectionLength == 0)
@@ -89,7 +109,7 @@ namespace Paperwallz
             var textbox = ActiveControl as TextBoxBase;
             if (textbox == null || MainWindow.HasText(textbox))
                 return;
-
+            
             TextBox_Enter(textbox, new EventArgs());
         }
 
@@ -149,14 +169,14 @@ namespace Paperwallz
                 SetText(passwordTextBox, oldPassword);
             }
 
-            Timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
-            if (Timespan < minimum)
+            timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
+            if (timespan < minimum)
             {
-                Timespan = minimum;
+                timespan = minimum;
 
-                hoursNumeric.Value = oldHours = Timespan.Hours;
-                minutesNumeric.Value = oldMinutes = Timespan.Minutes;
-                secondsNumeric.Value = oldSeconds = Timespan.Seconds;
+                hoursNumeric.Value = oldHours = timespan.Hours;
+                minutesNumeric.Value = oldMinutes = timespan.Minutes;
+                secondsNumeric.Value = oldSeconds = timespan.Seconds;
             }
 
             GotUsername = MainWindow.HasText(usernameTextBox);

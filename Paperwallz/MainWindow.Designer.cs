@@ -32,16 +32,6 @@ namespace Paperwallz
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "1",
-            "asd11",
-            "Salt",
-            "No"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
-            "2",
-            "Lmaokay",
-            "http://lmao.jpg",
-            "Yes"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.browseButton = new System.Windows.Forms.Button();
@@ -213,10 +203,6 @@ namespace Paperwallz
             this.queueList.FullRowSelect = true;
             this.queueList.GridLines = true;
             this.queueList.HideSelection = false;
-            listViewItem2.StateImageIndex = 0;
-            this.queueList.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2});
             this.queueList.LabelEdit = true;
             this.queueList.Location = new System.Drawing.Point(316, 12);
             this.queueList.MultiSelect = false;
@@ -349,6 +335,8 @@ namespace Paperwallz
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paperwallz [OFF]";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.imageControl.ResumeLayout(false);
             this.urlTab.ResumeLayout(false);
             this.urlTab.PerformLayout();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Paperwallz.Properties;
 
 namespace Paperwallz
 {
@@ -25,8 +27,9 @@ namespace Paperwallz
         private TimeSpan maxTime;
         private bool submitting;
         private bool wallhaven;
+        private const char separator = '=';
 
-        public MainWindow() //TODO: add config file
+        public MainWindow()
         {
             InitializeComponent();
             urlTextBox.Select();
@@ -39,6 +42,63 @@ namespace Paperwallz
                 MessageBox.Show("Script not found", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(0);
             }
+
+            ReadConfig();
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            if (Settings.Default.firsttime)
+            {
+                ShowSettingsWindow();
+                Settings.Default.firsttime = false;
+            }
+        }
+
+        private static string[] Separate(string pair)
+        {
+            var result = new string[2];
+            int n = pair.IndexOf(separator);
+            result[0] = pair.Substring(0, n);
+            result[1] = pair.Substring(n + 1, pair.Length - n - 1);
+            return result;
+        }
+
+        private void ReadConfig()
+        {
+            settingsWindow.Username = Settings.Default.username;
+            settingsWindow.Password = Settings.Default.password;
+            maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
+
+            if (Settings.Default.submissions[0] == "empty")
+                return;
+
+            var submissions = new string[Settings.Default.submissions.Count / 3][];
+            for (int i = 0; i < submissions.Length; i++)
+                submissions[i] = new string[3];
+
+            foreach (var pair in Settings.Default.submissions)
+            {
+                var separate = Separate(pair);
+                var key = separate[0];
+                var value = separate[1];
+
+                var split = key.Split(' ');
+                int n = Int32.Parse(split[0]) - 1;
+
+                int m = -1;
+                switch (split[1])
+                {
+                    case "t": m = 0; break;
+                    case "f": m = 1; break;
+                    case "i": m = 2; break;
+                }
+
+                submissions[n][m] = value;
+            }
+
+            for (int i = 0; i < submissions.Length; i++)
+                queueList.Items.Add(new ListViewItem(new[] {(i + 1).ToString(), submissions[i][0], submissions[i][1], submissions[i][2]}));
         }
 
         private void UpdateAddButton()
@@ -243,15 +303,47 @@ namespace Paperwallz
             queueList.Items.RemoveAt(selectedIndex);
         }
 
+        private void SaveSettings()
+        {
+            Settings.Default.username = settingsWindow.Username;
+            Settings.Default.password = settingsWindow.Password;
+            Settings.Default.maxtime = maxTime;
+
+            var submissions = new StringCollection();
+            for (int i = 0; i < queueList.Items.Count; i++)
+            {
+                submissions.Add((i + 1) + " t=" + queueList.Items[i].SubItems[1].Text);
+                submissions.Add((i + 1) + " f=" + queueList.Items[i].SubItems[2].Text);
+                submissions.Add((i + 1) + " i=" + queueList.Items[i].SubItems[3].Text);
+            }
+
+            if (submissions.Count == 0)
+                submissions.Add("empty");
+
+            Settings.Default.submissions = submissions;
+
+            Settings.Default.Save();
+        }
+
         private void addButton_Click(object sender, EventArgs e)
         {
-            queueList.Items.Add(new ListViewItem(new[]
-                {
-                    (queueList.Items.Count + 1).ToString(),
-                    titleTextBox.Text,
-                    imageControl.SelectedIndex == 0 ? urlTextBox.Text : openFileDialog.FileName,
-                    imageControl.SelectedIndex == 0 ? "Yes" : "No"
-                }));
+            string number = (queueList.Items.Count + 1).ToString();
+            string title = titleTextBox.Text;
+            string file;
+            string internet;
+
+            if (imageControl.SelectedIndex == 0)
+            {
+                file = urlTextBox.Text;
+                internet = "Yes";
+            }
+            else
+            {
+                file = openFileDialog.FileName;
+                internet = "No";
+            }
+
+            queueList.Items.Add(new ListViewItem(new[] {number, title, file, internet}));
         }
 
         private void Swap(int a, int b)
@@ -357,9 +449,20 @@ namespace Paperwallz
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
+            ShowSettingsWindow();
+        }
+
+        private void ShowSettingsWindow()
+        {
             settingsWindow.ShowDialog();
             switchButton.Enabled = settingsWindow.GotUsername && settingsWindow.GotPassword;
             maxTime = settingsWindow.Timespan;
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Hide();
+            SaveSettings();
         }
     }
 }
