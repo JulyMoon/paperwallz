@@ -68,6 +68,8 @@ namespace Paperwallz
         {
             settingsWindow.Username = Settings.Default.username;
             settingsWindow.Password = Settings.Default.password;
+            switchButton.Enabled = settingsWindow.GotCredentials();
+
             maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
 
             if (Settings.Default.submissions[0] == "empty")
@@ -262,7 +264,7 @@ namespace Paperwallz
                     error = "Unable to log into Reddit. Wrong username/password combination, perhaps?";
             }
 
-            e.Result = error;
+            e.Result = error + "\n" + output; //TODO: remove output
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -385,24 +387,28 @@ namespace Paperwallz
                 submitting = true;
                 UpdateTitle(false);
 
-                string url = urlTextBox.Text;
+                string file = queueList.Items[0].SubItems[2].Text;
+                bool internet = queueList.Items[0].SubItems[3].Text == "Yes";
 
-                if (imageControl.SelectedIndex == 0 && Regex.IsMatch(url, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
+                if (internet && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
                 {
-                    string contents = webClient.DownloadString(url);
+                    string contents = webClient.DownloadString(file);
                     int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
                     if (index != -1)
                     {
                         index += 9;
-                        url = "http:" + contents.Substring(index, contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
+                        file = "http:" +
+                               contents.Substring(index,
+                                   contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
                         wallhaven = true;
                         UpdateTitle(false);
                     }
                 }
 
-                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, titleTextBox.Text,
-                    (imageControl.SelectedIndex == 0 ? url : openFileDialog.FileName), settingsWindow.Username,
-                    settingsWindow.Password, imageControl.SelectedIndex == 0));
+                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, queueList.Items[0].SubItems[1].Text,
+                    file, settingsWindow.Username, settingsWindow.Password, internet));
+
+                queueList.Items.RemoveAt(0);
             }
 
             UpdateTime();
@@ -411,8 +417,8 @@ namespace Paperwallz
         private void UpdateTime()
         {
             timeLeftLabel.Text = timeLeft.ToString();
-            progressBar.Value = 100 - (int)(((double)timeLeft.Ticks / maxTime.Ticks) * 100);
-                              //(int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
+            progressBar.Value = //100 - (int)(((double)timeLeft.Ticks / maxTime.Ticks) * 100);
+                                (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
         }
 
         private void switchButton_Click(object sender, EventArgs e)
@@ -455,7 +461,7 @@ namespace Paperwallz
         private void ShowSettingsWindow()
         {
             settingsWindow.ShowDialog();
-            switchButton.Enabled = settingsWindow.GotUsername && settingsWindow.GotPassword;
+            switchButton.Enabled = settingsWindow.GotCredentials();
             maxTime = settingsWindow.Timespan;
         }
 

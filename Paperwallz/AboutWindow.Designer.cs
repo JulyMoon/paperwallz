@@ -42,7 +42,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(71, 143);
+            this.okButton.Location = new System.Drawing.Point(71, 148);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 24);
             this.okButton.TabIndex = 0;
@@ -127,7 +127,7 @@
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(222, 178);
+            this.ClientSize = new System.Drawing.Size(222, 188);
             this.Controls.Add(this.emailLabel);
             this.Controls.Add(this.authorLabel);
             this.Controls.Add(this.emailLabel2);

@@ -6,7 +6,6 @@ namespace Paperwallz
 {
     public partial class SettingsWindow : Form
     {
-        public bool GotUsername, GotPassword;
         private decimal oldHours, oldMinutes, oldSeconds;
         private string oldUsername, oldPassword;
         private TimeSpan timespan;
@@ -178,9 +177,11 @@ namespace Paperwallz
                 minutesNumeric.Value = oldMinutes = timespan.Minutes;
                 secondsNumeric.Value = oldSeconds = timespan.Seconds;
             }
+        }
 
-            GotUsername = MainWindow.HasText(usernameTextBox);
-            GotPassword = MainWindow.HasText(passwordTextBox);
+        public bool GotCredentials()
+        {
+            return MainWindow.HasText(usernameTextBox) && MainWindow.HasText(passwordTextBox);
         }
 
         private void applyButton_Click(object sender, EventArgs e)
