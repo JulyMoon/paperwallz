@@ -56,6 +56,36 @@ namespace Paperwallz
             }
         }
 
+        private string GetItemTitle(int index)
+        {
+            return queueList.Items[index].SubItems[1].Text;
+        }
+
+        private void SetItemTitle(int index, string title)
+        {
+            queueList.Items[index].SubItems[1].Text = title;
+        }
+
+        private string GetItemFile(int index)
+        {
+            return queueList.Items[index].SubItems[2].Text;
+        }
+
+        private void SetItemFile(int index, string file)
+        {
+            queueList.Items[index].SubItems[2].Text = file;
+        }
+
+        private bool GetItemIsUrl(int index)
+        {
+            return queueList.Items[index].SubItems[3].Text == "Yes";
+        }
+
+        private void SetItemIsUrl(int index, bool isUrl)
+        {
+            queueList.Items[index].SubItems[3].Text = isUrl ? "Yes" : "No";
+        }
+
         private static string[] Separate(string pair)
         {
             var result = new string[2];
@@ -318,8 +348,8 @@ namespace Paperwallz
             var submissions = new StringCollection();
             for (int i = 0; i < queueList.Items.Count; i++)
             {
-                submissions.Add((i + 1) + " t=" + queueList.Items[i].SubItems[1].Text);
-                submissions.Add((i + 1) + " f=" + queueList.Items[i].SubItems[2].Text);
+                submissions.Add((i + 1) + " t=" + GetItemTitle(i));
+                submissions.Add((i + 1) + " f=" + GetItemFile(i));
                 submissions.Add((i + 1) + " i=" + queueList.Items[i].SubItems[3].Text);
             }
 
@@ -391,10 +421,10 @@ namespace Paperwallz
                 submitting = true;
                 UpdateTitle();
 
-                string file = queueList.Items[0].SubItems[2].Text;
-                bool internet = queueList.Items[0].SubItems[3].Text == "Yes";
+                string file = GetItemFile(0);
+                bool isUrl = GetItemIsUrl(0);
 
-                if (internet && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
+                if (isUrl && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
                 {
                     string contents = webClient.DownloadString(file);
                     int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
@@ -406,8 +436,8 @@ namespace Paperwallz
                     }
                 }
 
-                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, queueList.Items[0].SubItems[1].Text,
-                    file, settingsWindow.Username, settingsWindow.Password, internet));
+                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, GetItemTitle(0),
+                    file, settingsWindow.Username, settingsWindow.Password, isUrl));
 
                 beingSubmitted = queueList.Items[0];
                 queueList.Items.RemoveAt(0);
@@ -500,8 +530,8 @@ namespace Paperwallz
 
         private void queueList_ItemActivate(object sender, EventArgs e)
         {
-            if (queueList.Items[selectedIndex].SubItems[3].Text == "Yes")
-                Process.Start(queueList.Items[selectedIndex].SubItems[2].Text);
+            if (GetItemIsUrl(selectedIndex))
+                Process.Start(GetItemFile(selectedIndex));
         }
     }
 }
