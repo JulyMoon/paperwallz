@@ -26,7 +26,6 @@ namespace Paperwallz
         private TimeSpan timeLeft = TimeSpan.Zero;
         private TimeSpan maxTime;
         private bool submitting;
-        private bool wallhaven;
         private const char separator = '=';
 
         public MainWindow()
@@ -44,6 +43,7 @@ namespace Paperwallz
             }
 
             ReadConfig();
+            UpdateTitle();
         }
 
         private void MainWindow_Shown(object sender, EventArgs e)
@@ -211,7 +211,7 @@ namespace Paperwallz
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var args = (ScriptArgs)e.Argument;
-
+            
             Process pyscript = new Process
             {
                 StartInfo =
@@ -270,16 +270,17 @@ namespace Paperwallz
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             submitting = false;
-            wallhaven = false;
 
             string result = (string)e.Result;
             if (result != "Noice")
             {
                 SwitchPosting(false);
+                timeLeft = TimeSpan.Zero;
+                UpdateTime();
                 MessageBox.Show(result, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
-                UpdateTitle(true);
+                UpdateTitle();
         }
 
         private void pasteButton_Click(object sender, EventArgs e)
@@ -385,7 +386,7 @@ namespace Paperwallz
                 timeLeft = maxTime;
 
                 submitting = true;
-                UpdateTitle(false);
+                UpdateTitle();
 
                 string file = queueList.Items[0].SubItems[2].Text;
                 bool internet = queueList.Items[0].SubItems[3].Text == "Yes";
@@ -397,11 +398,8 @@ namespace Paperwallz
                     if (index != -1)
                     {
                         index += 9;
-                        file = "http:" +
-                               contents.Substring(index,
+                        file = "http:" + contents.Substring(index,
                                    contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
-                        wallhaven = true;
-                        UpdateTitle(false);
                     }
                 }
 
@@ -411,6 +409,7 @@ namespace Paperwallz
                 queueList.Items.RemoveAt(0);
             }
 
+            UpdateTitle();
             UpdateTime();
         }
 
@@ -426,15 +425,11 @@ namespace Paperwallz
             SwitchPosting(!timer.Enabled);
         }
 
-        private void UpdateTitle(bool updateSwitch)
+        private void UpdateTitle()
         {
-            if (updateSwitch)
-                switchButton.Text = timer.Enabled ? "Stop" : "Start";
-
-            Text = Application.ProductName +
-                   (timer.Enabled ? " [ON]" : " [OFF]") +
-                   (submitting ? " [Submitting]" : "") +
-                   (wallhaven ? " [W]" : "");
+            notifyIcon.Text = Text = Application.ProductName +
+                                     (timer.Enabled ? " [ON] [" + timeLeft + "]" : " [OFF]") +
+                                     (submitting ? " [Submitting]" : "");
         }
 
         private void SwitchPosting(bool start)
@@ -443,14 +438,14 @@ namespace Paperwallz
             {
                 settingsWindow.SetReadOnly(true);
                 timer.Start();
+                switchButton.Text = "Stop";
             }
             else
             {
                 timer.Stop();
                 settingsWindow.SetReadOnly(false);
+                switchButton.Text = "Start";
             }
-
-            UpdateTitle(true);
         }
 
         private void settingsButton_Click(object sender, EventArgs e)
@@ -469,6 +464,26 @@ namespace Paperwallz
         {
             Hide();
             SaveSettings();
+        }
+
+        private void notifyIcon_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                Show();
+                WindowState = FormWindowState.Normal;
+            }
+            else
+            {
+                WindowState = FormWindowState.Minimized;
+                Hide();
+            }
+        }
+
+        private void MainWindow_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+                Hide();
         }
     }
 }

@@ -58,6 +58,7 @@ namespace Paperwallz
             this.descriptiveLabel = new System.Windows.Forms.Label();
             this.timeLeftLabel = new System.Windows.Forms.Label();
             this.settingsButton = new System.Windows.Forms.Button();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.imageControl.SuspendLayout();
             this.urlTab.SuspendLayout();
             this.pcTab.SuspendLayout();
@@ -311,6 +312,13 @@ namespace Paperwallz
             this.settingsButton.UseVisualStyleBackColor = true;
             this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "Paperwallz";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -333,10 +341,12 @@ namespace Paperwallz
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainWindow";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Paperwallz [OFF]";
+            this.Text = "Paperwallz";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
+            this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.imageControl.ResumeLayout(false);
             this.urlTab.ResumeLayout(false);
             this.urlTab.PerformLayout();
@@ -374,6 +384,7 @@ namespace Paperwallz
         private Label descriptiveLabel;
         private Label timeLeftLabel;
         private Button settingsButton;
+        private NotifyIcon notifyIcon;
     }
 }
 
