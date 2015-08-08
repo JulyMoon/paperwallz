@@ -27,6 +27,7 @@ namespace Paperwallz
         private TimeSpan maxTime;
         private bool submitting;
         private const char separator = '=';
+        private ListViewItem beingSubmitted;
 
         public MainWindow()
         {
@@ -276,11 +277,13 @@ namespace Paperwallz
             {
                 SwitchPosting(false);
                 timeLeft = TimeSpan.Zero;
-                UpdateTime();
+                UpdateTime(true);
+                queueList.Items.Insert(0, beingSubmitted);
+                UpdateListNumbers();
                 MessageBox.Show(result, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
-                UpdateTitle();
+
+            UpdateTitle();
         }
 
         private void pasteButton_Click(object sender, EventArgs e)
@@ -406,18 +409,25 @@ namespace Paperwallz
                 backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, queueList.Items[0].SubItems[1].Text,
                     file, settingsWindow.Username, settingsWindow.Password, internet));
 
+                beingSubmitted = queueList.Items[0];
                 queueList.Items.RemoveAt(0);
+                UpdateListNumbers();
             }
 
             UpdateTitle();
-            UpdateTime();
+            UpdateTime(false);
         }
 
-        private void UpdateTime()
+        private void UpdateListNumbers()
+        {
+            for (int i = 0; i < queueList.Items.Count; i++)
+                queueList.Items[i].SubItems[0].Text = (i + 1).ToString();
+        }
+
+        private void UpdateTime(bool noProgress)
         {
             timeLeftLabel.Text = timeLeft.ToString();
-            progressBar.Value = //100 - (int)(((double)timeLeft.Ticks / maxTime.Ticks) * 100);
-                                (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
+            progressBar.Value = noProgress ? 0 : (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
         }
 
         private void switchButton_Click(object sender, EventArgs e)
@@ -446,6 +456,8 @@ namespace Paperwallz
                 settingsWindow.SetReadOnly(false);
                 switchButton.Text = "Start";
             }
+
+            UpdateTitle();
         }
 
         private void settingsButton_Click(object sender, EventArgs e)
@@ -484,6 +496,12 @@ namespace Paperwallz
         {
             if (WindowState == FormWindowState.Minimized)
                 Hide();
+        }
+
+        private void queueList_ItemActivate(object sender, EventArgs e)
+        {
+            if (queueList.Items[selectedIndex].SubItems[3].Text == "Yes")
+                Process.Start(queueList.Items[selectedIndex].SubItems[2].Text);
         }
     }
 }

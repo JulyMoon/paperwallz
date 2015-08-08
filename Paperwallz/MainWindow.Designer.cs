@@ -214,6 +214,7 @@ namespace Paperwallz
             this.queueList.TabIndex = 13;
             this.queueList.UseCompatibleStateImageBehavior = false;
             this.queueList.View = System.Windows.Forms.View.Details;
+            this.queueList.ItemActivate += new System.EventHandler(this.queueList_ItemActivate);
             this.queueList.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.queueList_ItemDrag);
             this.queueList.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.queueList_ItemSelectionChanged);
             this.queueList.MouseUp += new System.Windows.Forms.MouseEventHandler(this.queueList_MouseUp);
