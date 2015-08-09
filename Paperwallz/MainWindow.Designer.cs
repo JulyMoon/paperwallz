@@ -123,7 +123,7 @@ namespace Paperwallz
             // 
             // aboutButton
             // 
-            this.aboutButton.Location = new System.Drawing.Point(107, 196);
+            this.aboutButton.Location = new System.Drawing.Point(12, 196);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(51, 27);
             this.aboutButton.TabIndex = 8;
@@ -193,8 +193,9 @@ namespace Paperwallz
             // queueList
             // 
             this.queueList.Activation = System.Windows.Forms.ItemActivation.TwoClick;
-            this.queueList.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.queueList.AllowColumnReorder = true;
+            this.queueList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.queueList.AutoArrange = false;
             this.queueList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.numberColumn,
@@ -204,13 +205,10 @@ namespace Paperwallz
             this.queueList.FullRowSelect = true;
             this.queueList.GridLines = true;
             this.queueList.HideSelection = false;
-            this.queueList.LabelEdit = true;
             this.queueList.Location = new System.Drawing.Point(316, 12);
             this.queueList.MultiSelect = false;
             this.queueList.Name = "queueList";
-            this.queueList.ShowGroups = false;
             this.queueList.Size = new System.Drawing.Size(298, 211);
-            this.queueList.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.queueList.TabIndex = 13;
             this.queueList.UseCompatibleStateImageBehavior = false;
             this.queueList.View = System.Windows.Forms.View.Details;
@@ -227,12 +225,12 @@ namespace Paperwallz
             // titleColumn
             // 
             this.titleColumn.Text = "Title";
-            this.titleColumn.Width = 121;
+            this.titleColumn.Width = 91;
             // 
             // fileColumn
             // 
             this.fileColumn.Text = "File";
-            this.fileColumn.Width = 93;
+            this.fileColumn.Width = 123;
             // 
             // internetColumn
             // 
@@ -305,7 +303,7 @@ namespace Paperwallz
             // 
             // settingsButton
             // 
-            this.settingsButton.Location = new System.Drawing.Point(12, 196);
+            this.settingsButton.Location = new System.Drawing.Point(69, 196);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(89, 27);
             this.settingsButton.TabIndex = 20;
@@ -322,6 +320,7 @@ namespace Paperwallz
             // 
             // MainWindow
             // 
+            this.AcceptButton = this.addButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 235);
@@ -338,9 +337,10 @@ namespace Paperwallz
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.aboutButton);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(1000, 274);
+            this.MinimumSize = new System.Drawing.Size(542, 274);
             this.Name = "MainWindow";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

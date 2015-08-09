@@ -337,6 +337,7 @@ namespace Paperwallz
 
         private void removeButton_Click(object sender, EventArgs e)
         {
+            int selected = selectedIndex;
             queueList.Items.RemoveAt(selectedIndex);
 
             if (queueList.Items.Count == 0)
@@ -346,6 +347,16 @@ namespace Paperwallz
                 if (timer.Enabled)
                     SwitchPosting(false);
             }
+
+            UpdateListNumbers();
+
+            if (queueList.Items.Count == 0)
+                return;
+
+            if (queueList.Items.Count - 1 < selected)
+                queueList.Items[queueList.Items.Count - 1].Selected = true;
+            else
+                queueList.Items[selected].Selected = true;
         }
 
         private void SaveSettings()
@@ -547,7 +558,7 @@ namespace Paperwallz
         private void queueList_ItemActivate(object sender, EventArgs e)
         {
             if (GetItemIsUrl(selectedIndex))
-                Process.Start(GetItemFile(selectedIndex));
+                Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw exception
         }
     }
 }
