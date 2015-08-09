@@ -40,7 +40,7 @@ namespace Paperwallz
             if (!File.Exists(scriptLocation))
             {
                 MessageBox.Show("Script not found", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
+                Application.Exit();
             }
 
             ReadConfig();
@@ -95,11 +95,15 @@ namespace Paperwallz
             return result;
         }
 
+        private void UpdateSwitch()
+        {
+            switchButton.Enabled = timer.Enabled || settingsWindow.GotCredentials() && queueList.Items.Count > 0;
+        }
+
         private void ReadConfig()
         {
             settingsWindow.Username = Settings.Default.username;
             settingsWindow.Password = Settings.Default.password;
-            switchButton.Enabled = settingsWindow.GotCredentials();
 
             maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
 
@@ -132,16 +136,13 @@ namespace Paperwallz
 
             for (int i = 0; i < submissions.Length; i++)
                 queueList.Items.Add(new ListViewItem(new[] {(i + 1).ToString(), submissions[i][0], submissions[i][1], submissions[i][2]}));
+
+            UpdateSwitch();
         }
 
         private void UpdateAddButton()
         {
             addButton.Enabled = gotFile && gotTitle;
-        }
-
-        public void UpdateSwitch(bool enabled)
-        {
-            switchButton.Enabled = enabled;
         }
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
@@ -337,6 +338,14 @@ namespace Paperwallz
         private void removeButton_Click(object sender, EventArgs e)
         {
             queueList.Items.RemoveAt(selectedIndex);
+
+            if (queueList.Items.Count == 0)
+            {
+                switchButton.Enabled = false;
+
+                if (timer.Enabled)
+                    SwitchPosting(false);
+            }
         }
 
         private void SaveSettings()
@@ -380,6 +389,7 @@ namespace Paperwallz
             }
 
             queueList.Items.Add(new ListViewItem(new[] {number, title, file, internet}));
+            UpdateSwitch();
         }
 
         private void Swap(int a, int b)
@@ -421,8 +431,18 @@ namespace Paperwallz
                 submitting = true;
                 UpdateTitle();
 
-                string file = GetItemFile(0);
-                bool isUrl = GetItemIsUrl(0);
+                beingSubmitted = queueList.Items[0];
+                queueList.Items.RemoveAt(0);
+                UpdateListNumbers();
+
+                if (queueList.Items.Count == 0)
+                {
+                    SwitchPosting(false);
+                    switchButton.Enabled = false;
+                }
+
+                string file = beingSubmitted.SubItems[2].Text;
+                bool isUrl = beingSubmitted.SubItems[3].Text == "Yes";
 
                 if (isUrl && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
                 {
@@ -436,12 +456,8 @@ namespace Paperwallz
                     }
                 }
 
-                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, GetItemTitle(0),
+                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, beingSubmitted.SubItems[1].Text,
                     file, settingsWindow.Username, settingsWindow.Password, isUrl));
-
-                beingSubmitted = queueList.Items[0];
-                queueList.Items.RemoveAt(0);
-                UpdateListNumbers();
             }
 
             UpdateTitle();
@@ -498,7 +514,7 @@ namespace Paperwallz
         private void ShowSettingsWindow()
         {
             settingsWindow.ShowDialog();
-            switchButton.Enabled = settingsWindow.GotCredentials();
+            UpdateSwitch();
             maxTime = settingsWindow.Timespan;
         }
 
