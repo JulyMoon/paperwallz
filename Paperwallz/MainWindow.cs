@@ -44,6 +44,7 @@ namespace Paperwallz
 
             ReadConfig();
             UpdateTitle();
+            UpdateTime();
         }
 
         private void MainWindow_Shown(object sender, EventArgs e)
@@ -292,7 +293,7 @@ namespace Paperwallz
             {
                 SwitchPosting(false);
                 timeLeft = TimeSpan.Zero;
-                UpdateTime(true);
+                UpdateTime();
                 queueList.Items.Insert(0, beingSubmitted);
                 UpdateListNumbers();
                 MessageBox.Show(result, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -449,7 +450,7 @@ namespace Paperwallz
             }
 
             UpdateTitle();
-            UpdateTime(false);
+            UpdateTime();
         }
 
         private void UpdateListNumbers()
@@ -458,10 +459,15 @@ namespace Paperwallz
                 queueList.Items[i].SubItems[0].Text = (i + 1).ToString();
         }
 
-        private void UpdateTime(bool noProgress)
+        private void UpdateTime()
+        {
+            UpdateTimeLabel();
+            trackBar.Value = (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * trackBar.Maximum);
+        }
+
+        private void UpdateTimeLabel()
         {
             timeLeftLabel.Text = timeLeft.ToString();
-            progressBar.Value = noProgress ? 0 : (int)((1 - ((double)timeLeft.Ticks / maxTime.Ticks)) * 100);
         }
 
         private void switchButton_Click(object sender, EventArgs e)
@@ -483,12 +489,14 @@ namespace Paperwallz
                 settingsWindow.SetReadOnly(true);
                 timer.Start();
                 switchButton.Text = "Stop";
+                trackBar.Enabled = false;
             }
             else
             {
                 timer.Stop();
                 settingsWindow.SetReadOnly(false);
                 switchButton.Text = "Start";
+                trackBar.Enabled = true;
             }
 
             UpdateTitle();
@@ -502,8 +510,12 @@ namespace Paperwallz
         private void ShowSettingsWindow()
         {
             settingsWindow.ShowDialog();
-            UpdateSwitch();
+            
             maxTime = settingsWindow.Timespan;
+            timeLeft = TimeSpan.Zero;
+
+            UpdateTime();
+            UpdateSwitch();
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -536,6 +548,16 @@ namespace Paperwallz
         {
             if (IsUrl(queueList.Items[selectedIndex].SubItems[2].Text))
                 Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw exception
+        }
+
+        private void trackBar_ValueChanged(object sender, EventArgs e)
+        {
+            if (!trackBar.Enabled)
+                return;
+
+            timeLeft = new TimeSpan((long)Math.Round((1 - (double)trackBar.Value / trackBar.Maximum) * maxTime.Ticks));
+
+            UpdateTimeLabel();
         }
     }
 }

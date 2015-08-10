@@ -53,14 +53,15 @@ namespace Paperwallz
             this.removeButton = new System.Windows.Forms.Button();
             this.switchButton = new System.Windows.Forms.Button();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.descriptiveLabel = new System.Windows.Forms.Label();
             this.timeLeftLabel = new System.Windows.Forms.Label();
             this.settingsButton = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trackBar = new System.Windows.Forms.TrackBar();
             this.imageControl.SuspendLayout();
             this.urlTab.SuspendLayout();
             this.pcTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog
@@ -94,7 +95,7 @@ namespace Paperwallz
             // 
             // openButton
             // 
-            this.openButton.Location = new System.Drawing.Point(164, 196);
+            this.openButton.Location = new System.Drawing.Point(164, 203);
             this.openButton.Name = "openButton";
             this.openButton.Size = new System.Drawing.Size(51, 27);
             this.openButton.TabIndex = 10;
@@ -122,7 +123,7 @@ namespace Paperwallz
             // 
             // aboutButton
             // 
-            this.aboutButton.Location = new System.Drawing.Point(12, 196);
+            this.aboutButton.Location = new System.Drawing.Point(12, 203);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(51, 27);
             this.aboutButton.TabIndex = 8;
@@ -207,7 +208,7 @@ namespace Paperwallz
             this.queueList.Location = new System.Drawing.Point(316, 12);
             this.queueList.MultiSelect = false;
             this.queueList.Name = "queueList";
-            this.queueList.Size = new System.Drawing.Size(298, 211);
+            this.queueList.Size = new System.Drawing.Size(298, 218);
             this.queueList.TabIndex = 13;
             this.queueList.UseCompatibleStateImageBehavior = false;
             this.queueList.View = System.Windows.Forms.View.Details;
@@ -224,12 +225,12 @@ namespace Paperwallz
             // titleColumn
             // 
             this.titleColumn.Text = "Title";
-            this.titleColumn.Width = 91;
+            this.titleColumn.Width = 131;
             // 
             // fileColumn
             // 
             this.fileColumn.Text = "File";
-            this.fileColumn.Width = 171;
+            this.fileColumn.Width = 131;
             // 
             // addButton
             // 
@@ -256,7 +257,7 @@ namespace Paperwallz
             // switchButton
             // 
             this.switchButton.Enabled = false;
-            this.switchButton.Location = new System.Drawing.Point(221, 196);
+            this.switchButton.Location = new System.Drawing.Point(221, 203);
             this.switchButton.Name = "switchButton";
             this.switchButton.Size = new System.Drawing.Size(89, 27);
             this.switchButton.TabIndex = 16;
@@ -269,17 +270,10 @@ namespace Paperwallz
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // progressBar
-            // 
-            this.progressBar.Location = new System.Drawing.Point(12, 150);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(298, 27);
-            this.progressBar.TabIndex = 17;
-            // 
             // descriptiveLabel
             // 
             this.descriptiveLabel.AutoSize = true;
-            this.descriptiveLabel.Location = new System.Drawing.Point(12, 180);
+            this.descriptiveLabel.Location = new System.Drawing.Point(9, 181);
             this.descriptiveLabel.Name = "descriptiveLabel";
             this.descriptiveLabel.Size = new System.Drawing.Size(149, 13);
             this.descriptiveLabel.TabIndex = 18;
@@ -288,7 +282,7 @@ namespace Paperwallz
             // timeLeftLabel
             // 
             this.timeLeftLabel.AutoSize = true;
-            this.timeLeftLabel.Location = new System.Drawing.Point(261, 180);
+            this.timeLeftLabel.Location = new System.Drawing.Point(258, 181);
             this.timeLeftLabel.Name = "timeLeftLabel";
             this.timeLeftLabel.Size = new System.Drawing.Size(49, 13);
             this.timeLeftLabel.TabIndex = 19;
@@ -296,7 +290,7 @@ namespace Paperwallz
             // 
             // settingsButton
             // 
-            this.settingsButton.Location = new System.Drawing.Point(69, 196);
+            this.settingsButton.Location = new System.Drawing.Point(69, 203);
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(89, 27);
             this.settingsButton.TabIndex = 20;
@@ -311,17 +305,27 @@ namespace Paperwallz
             this.notifyIcon.Visible = true;
             this.notifyIcon.Click += new System.EventHandler(this.notifyIcon_Click);
             // 
+            // trackBar
+            // 
+            this.trackBar.BackColor = System.Drawing.SystemColors.Control;
+            this.trackBar.Location = new System.Drawing.Point(5, 152);
+            this.trackBar.Maximum = 300;
+            this.trackBar.Name = "trackBar";
+            this.trackBar.Size = new System.Drawing.Size(312, 45);
+            this.trackBar.TabIndex = 21;
+            this.trackBar.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
+            // 
             // MainWindow
             // 
             this.AcceptButton = this.addButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 235);
+            this.ClientSize = new System.Drawing.Size(626, 242);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.timeLeftLabel);
             this.Controls.Add(this.descriptiveLabel);
             this.Controls.Add(this.openButton);
-            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.switchButton);
             this.Controls.Add(this.removeButton);
             this.Controls.Add(this.addButton);
@@ -329,10 +333,10 @@ namespace Paperwallz
             this.Controls.Add(this.imageControl);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.aboutButton);
+            this.Controls.Add(this.trackBar);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 274);
             this.MinimumSize = new System.Drawing.Size(542, 274);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -345,6 +349,7 @@ namespace Paperwallz
             this.urlTab.PerformLayout();
             this.pcTab.ResumeLayout(false);
             this.pcTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -372,11 +377,11 @@ namespace Paperwallz
         private Button removeButton;
         private Button switchButton;
         private Timer timer;
-        private ProgressBar progressBar;
         private Label descriptiveLabel;
         private Label timeLeftLabel;
         private Button settingsButton;
         private NotifyIcon notifyIcon;
+        private TrackBar trackBar;
     }
 }
 
