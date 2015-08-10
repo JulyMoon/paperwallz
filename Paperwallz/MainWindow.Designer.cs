@@ -49,7 +49,6 @@ namespace Paperwallz
             this.numberColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.titleColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.fileColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.internetColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.addButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
             this.switchButton = new System.Windows.Forms.Button();
@@ -193,6 +192,7 @@ namespace Paperwallz
             // queueList
             // 
             this.queueList.Activation = System.Windows.Forms.ItemActivation.TwoClick;
+            this.queueList.AllowColumnReorder = true;
             this.queueList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -200,8 +200,7 @@ namespace Paperwallz
             this.queueList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.numberColumn,
             this.titleColumn,
-            this.fileColumn,
-            this.internetColumn});
+            this.fileColumn});
             this.queueList.FullRowSelect = true;
             this.queueList.GridLines = true;
             this.queueList.HideSelection = false;
@@ -230,13 +229,7 @@ namespace Paperwallz
             // fileColumn
             // 
             this.fileColumn.Text = "File";
-            this.fileColumn.Width = 123;
-            // 
-            // internetColumn
-            // 
-            this.internetColumn.Text = "Internet";
-            this.internetColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.internetColumn.Width = 48;
+            this.fileColumn.Width = 171;
             // 
             // addButton
             // 
@@ -342,7 +335,6 @@ namespace Paperwallz
             this.MaximumSize = new System.Drawing.Size(1000, 274);
             this.MinimumSize = new System.Drawing.Size(542, 274);
             this.Name = "MainWindow";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paperwallz";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
@@ -376,7 +368,6 @@ namespace Paperwallz
         private ColumnHeader numberColumn;
         private ColumnHeader titleColumn;
         private ColumnHeader fileColumn;
-        private ColumnHeader internetColumn;
         private Button addButton;
         private Button removeButton;
         private Button switchButton;

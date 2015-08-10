@@ -18,7 +18,6 @@ namespace Paperwallz
         private readonly SettingsWindow settingsWindow = new SettingsWindow();
         private readonly string scriptLocation;
         private const string link = "https://www.reddit.com/r/wallpapers/new/";
-        private readonly WebClient webClient = new WebClient();
         private bool gotFile, gotTitle;
         private const int maxFilenameLength = 29;
         private int selectedIndex = -1;
@@ -61,29 +60,14 @@ namespace Paperwallz
             return queueList.Items[index].SubItems[1].Text;
         }
 
-        private void SetItemTitle(int index, string title)
-        {
-            queueList.Items[index].SubItems[1].Text = title;
-        }
-
         private string GetItemFile(int index)
         {
             return queueList.Items[index].SubItems[2].Text;
         }
 
-        private void SetItemFile(int index, string file)
+        private bool IsUrl(string s)
         {
-            queueList.Items[index].SubItems[2].Text = file;
-        }
-
-        private bool GetItemIsUrl(int index)
-        {
-            return queueList.Items[index].SubItems[3].Text == "Yes";
-        }
-
-        private void SetItemIsUrl(int index, bool isUrl)
-        {
-            queueList.Items[index].SubItems[3].Text = isUrl ? "Yes" : "No";
+            return s.StartsWith("http");
         }
 
         private static string[] Separate(string pair)
@@ -110,9 +94,9 @@ namespace Paperwallz
             if (Settings.Default.submissions[0] == "empty")
                 return;
 
-            var submissions = new string[Settings.Default.submissions.Count / 3][];
+            var submissions = new string[Settings.Default.submissions.Count / 2][];
             for (int i = 0; i < submissions.Length; i++)
-                submissions[i] = new string[3];
+                submissions[i] = new string[2];
 
             foreach (var pair in Settings.Default.submissions)
             {
@@ -128,14 +112,13 @@ namespace Paperwallz
                 {
                     case "t": m = 0; break;
                     case "f": m = 1; break;
-                    case "i": m = 2; break;
                 }
 
                 submissions[n][m] = value;
             }
 
             for (int i = 0; i < submissions.Length; i++)
-                queueList.Items.Add(new ListViewItem(new[] {(i + 1).ToString(), submissions[i][0], submissions[i][1], submissions[i][2]}));
+                queueList.Items.Add(new ListViewItem(new[] {(i + 1).ToString(), submissions[i][0], submissions[i][1]}));
 
             UpdateSwitch();
         }
@@ -371,7 +354,6 @@ namespace Paperwallz
             {
                 submissions.Add((i + 1) + " t=" + GetItemTitle(i));
                 submissions.Add((i + 1) + " f=" + GetItemFile(i));
-                submissions.Add((i + 1) + " i=" + queueList.Items[i].SubItems[3].Text);
             }
 
             if (submissions.Count == 0)
@@ -386,21 +368,9 @@ namespace Paperwallz
         {
             string number = (queueList.Items.Count + 1).ToString();
             string title = titleTextBox.Text;
-            string file;
-            string internet;
+            var file = imageControl.SelectedIndex == 0 ? urlTextBox.Text : openFileDialog.FileName;
 
-            if (imageControl.SelectedIndex == 0)
-            {
-                file = urlTextBox.Text;
-                internet = "Yes";
-            }
-            else
-            {
-                file = openFileDialog.FileName;
-                internet = "No";
-            }
-
-            queueList.Items.Add(new ListViewItem(new[] {number, title, file, internet}));
+            queueList.Items.Add(new ListViewItem(new[] {number, title, file}));
             UpdateSwitch();
 
             if (imageControl.SelectedIndex == 0)
@@ -460,11 +430,11 @@ namespace Paperwallz
                 }
 
                 string file = beingSubmitted.SubItems[2].Text;
-                bool isUrl = beingSubmitted.SubItems[3].Text == "Yes";
+                bool isUrl = IsUrl(beingSubmitted.SubItems[2].Text);
 
                 if (isUrl && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
                 {
-                    string contents = webClient.DownloadString(file);
+                    string contents = new WebClient().DownloadString(file);
                     int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
                     if (index != -1)
                     {
@@ -564,7 +534,7 @@ namespace Paperwallz
 
         private void queueList_ItemActivate(object sender, EventArgs e)
         {
-            if (GetItemIsUrl(selectedIndex))
+            if (IsUrl(queueList.Items[selectedIndex].SubItems[2].Text))
                 Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw exception
         }
     }
