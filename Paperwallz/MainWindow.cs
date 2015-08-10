@@ -193,13 +193,14 @@ namespace Paperwallz
             if (openFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            gotFile = true;
-
             string filename = Path.GetFileName(openFileDialog.FileName);
 
             // ReSharper disable once PossibleNullReferenceException
             filenameLabel.Text = filename.Length > maxFilenameLength ?
                 filename.Substring(0, maxFilenameLength - 3) + "..." : filename;
+
+            gotFile = true;
+            UpdateAddButton();
         }
 
         private void TextBox_Enter(object sender, EventArgs e)
@@ -401,6 +402,11 @@ namespace Paperwallz
 
             queueList.Items.Add(new ListViewItem(new[] {number, title, file, internet}));
             UpdateSwitch();
+
+            if (imageControl.SelectedIndex == 0)
+                SettingsWindow.SetText(urlTextBox, "");
+
+            SettingsWindow.SetText(titleTextBox, "");
         }
 
         private void Swap(int a, int b)
@@ -439,6 +445,7 @@ namespace Paperwallz
             {
                 timeLeft = maxTime;
 
+                dragging = false;
                 submitting = true;
                 UpdateTitle();
 
