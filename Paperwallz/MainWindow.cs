@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Paperwallz.Properties;
+using RedditSharp;
+using RedditSharp.Things;
 
 namespace Paperwallz
 {
@@ -66,7 +68,7 @@ namespace Paperwallz
             return queueList.Items[index].SubItems[2].Text;
         }
 
-        private bool IsUrl(string s)
+        private static bool IsUrl(string s)
         {
             return s.StartsWith("http");
         }
@@ -228,6 +230,14 @@ namespace Paperwallz
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var args = (ScriptArgs)e.Argument;
+
+            Imgur imgur = new Imgur("8ee17b899ab80c3");
+            var image = args.fromUrl ? imgur.Upload(args.file, args.title, "test") : imgur.Upload(new Bitmap(args.file), args.title, "test");
+
+            Reddit r = new Reddit(args.username, args.password);
+            r.GetSubreddit("wallpapers").SubmitPost(args.title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+            //title + ' [' + str(image['width']) + '×' + str(image['height']) + ']'
+            /*var args = (ScriptArgs)e.Argument;
             
             Process pyscript = new Process
             {
@@ -282,6 +292,7 @@ namespace Paperwallz
             }
 
             e.Result = error + "\n" + output; //TODO: remove output
+            */
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -547,7 +558,7 @@ namespace Paperwallz
         private void queueList_ItemActivate(object sender, EventArgs e)
         {
             if (IsUrl(queueList.Items[selectedIndex].SubItems[2].Text))
-                Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw exception
+                Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw an exception
         }
 
         private void trackBar_ValueChanged(object sender, EventArgs e)
