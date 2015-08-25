@@ -12,38 +12,37 @@ using Paperwallz.Properties;
 using RedditSharp;
 using RedditSharp.Things;
 
-// TODO: exceptions
-
 namespace Paperwallz
 {
     public partial class MainWindow : Form
     {
         private readonly AboutWindow aboutWindow = new AboutWindow();
         private readonly SettingsWindow settingsWindow = new SettingsWindow();
+        private readonly string scriptLocation;
+        private const string link = "https://www.reddit.com/r/wallpapers/new/";
         private bool gotFile, gotTitle;
+        private const int maxFilenameLength = 29;
         private int selectedIndex = -1;
         private bool dragging;
         private TimeSpan timeLeft = TimeSpan.Zero;
         private TimeSpan maxTime;
         private bool submitting;
+        private const char separator = '=';
         private ListViewItem beingSubmitted;
-        private const string clientId = "8ee17b899ab80c3";
-        private readonly string[] essentialDlls = {"HtmlAgilityPack.dll", "Newtonsoft.Json.dll", "RedditSharp.dll"};
-        private readonly Imgur imgur = new Imgur(clientId);
-        private Subreddit wallpapers;
 
         public MainWindow()
         {
             InitializeComponent();
             urlTextBox.Select();
 
-            foreach (var dll in essentialDlls)
-                // ReSharper disable once AssignNullToNotNullAttribute
-                if (!File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), dll)))
-                {
-                    MessageBox.Show(dll + " was not found. The application will now exit.", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Environment.Exit(1);
-                }
+            // ReSharper disable once AssignNullToNotNullAttribute
+            scriptLocation = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "py", "paperwallz.py");
+
+            if (!File.Exists(scriptLocation))
+            {
+                MessageBox.Show("Script not found", "Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
 
             ReadConfig();
             UpdateTitle();
@@ -77,7 +76,7 @@ namespace Paperwallz
         private static string[] Separate(string pair)
         {
             var result = new string[2];
-            int n = pair.IndexOf('=');
+            int n = pair.IndexOf(separator);
             result[0] = pair.Substring(0, n);
             result[1] = pair.Substring(n + 1, pair.Length - n - 1);
             return result;
@@ -85,13 +84,13 @@ namespace Paperwallz
 
         private void UpdateSwitch()
         {
-            switchButton.Enabled = timer.Enabled || settingsWindow.Signedin && queueList.Items.Count > 0;
+            switchButton.Enabled = timer.Enabled || settingsWindow.GotCredentials() && queueList.Items.Count > 0;
         }
 
         private void ReadConfig()
         {
-            //settingsWindow.Username = Settings.Default.username; TODO
-            //settingsWindow.Password = Settings.Default.password;
+            settingsWindow.Username = Settings.Default.username;
+            settingsWindow.Password = Settings.Default.password;
 
             maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
 
@@ -161,16 +160,17 @@ namespace Paperwallz
 
         private struct ScriptArgs
         {
-            public readonly bool isUrl;
-            public readonly string title, file;
-            public readonly Subreddit subreddit;
+            public readonly bool fromUrl;
+            public readonly string scriptLocation, title, file, username, password;
 
-            public ScriptArgs(string title, string file, Subreddit subreddit, bool isUrl)
+            public ScriptArgs(string scriptLocation, string title, string file, string username, string password, bool fromUrl)
             {
+                this.scriptLocation = scriptLocation;
                 this.title = title;
                 this.file = file;
-                this.subreddit = subreddit;
-                this.isUrl = isUrl;
+                this.username = username;
+                this.password = password;
+                this.fromUrl = fromUrl;
             }
         }
 
@@ -181,7 +181,6 @@ namespace Paperwallz
 
             string filename = Path.GetFileName(openFileDialog.FileName);
 
-            const int maxFilenameLength = 29;
             // ReSharper disable once PossibleNullReferenceException
             filenameLabel.Text = filename.Length > maxFilenameLength ?
                 filename.Substring(0, maxFilenameLength - 3) + "..." : filename;
@@ -220,7 +219,7 @@ namespace Paperwallz
 
         private void openButton_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.reddit.com/r/wallpapers/new/");
+            Process.Start(link);
         }
 
         private void aboutButton_Click(object sender, EventArgs e)
@@ -232,11 +231,68 @@ namespace Paperwallz
         {
             var args = (ScriptArgs)e.Argument;
 
-            var image = args.isUrl ? imgur.Upload(args.file, args.title, "test") : imgur.Upload(new Bitmap(args.file), args.title, "test");
+            Imgur imgur = new Imgur("8ee17b899ab80c3");
+            var image = args.fromUrl ? imgur.Upload(args.file, args.title, "test") : imgur.Upload(new Bitmap(args.file), args.title, "test");
 
-            args.subreddit.SubmitPost(args.title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+            Reddit r = new Reddit(args.username, args.password);
+            r.GetSubreddit("wallpapers").SubmitPost(args.title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+            //title + ' [' + str(image['width']) + '×' + str(image['height']) + ']'
+            /*var args = (ScriptArgs)e.Argument;
+            
+            Process pyscript = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "python",
+                    Arguments = //"-W ignore " +
+                                "\"" + args.scriptLocation +
+                                "\" -t \"" + args.title +
+                                "\" -f \"" + args.file +
+                                "\" -n \"" + args.username +
+                                "\" -p \"" + args.password +
+                                (args.fromUrl ? "\" -i" : "\""),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            pyscript.Start();
+            string output = pyscript.StandardOutput.ReadToEnd();
+            pyscript.WaitForExit();
+
+            bool signedin = false;
+            bool uploaded = false;
+            bool submitted = false;
+            foreach (var line in output.Split('\n'))
+            {
+                if (line.Contains("SIGNEDIN"))
+                    signedin = true;
+
+                if (line.Contains("UPLOADED"))
+                    uploaded = true;
+
+                if (line.Contains("SUBMITTED"))
+                    submitted = true;
+            }
 
             e.Result = "Noice";
+
+            if (submitted)
+                return;
+
+            string error = "Unable to submit to /r/wallpapers. I don't know why :(";
+
+            if (!uploaded)
+            {
+                error = "Unable to upload to imgur.com. I don't know why :(";
+
+                if (!signedin)
+                    error = "Unable to log into Reddit. Wrong username/password combination, perhaps?";
+            }
+
+            e.Result = error + "\n" + output; //TODO: remove output
+            */
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -400,7 +456,8 @@ namespace Paperwallz
                     }
                 }
 
-                backgroundWorker.RunWorkerAsync(new ScriptArgs(beingSubmitted.SubItems[1].Text, file, wallpapers, isUrl));
+                backgroundWorker.RunWorkerAsync(new ScriptArgs(scriptLocation, beingSubmitted.SubItems[1].Text,
+                    file, settingsWindow.Username, settingsWindow.Password, isUrl));
             }
 
             UpdateTitle();
@@ -467,9 +524,6 @@ namespace Paperwallz
             
             maxTime = settingsWindow.Timespan;
             timeLeft = TimeSpan.Zero;
-
-            if (settingsWindow.Signedin)
-                wallpapers = settingsWindow.GetWallpapers();
 
             UpdateTime();
             UpdateSwitch();

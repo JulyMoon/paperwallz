@@ -30,8 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsWindow));
             this.redditGroupBox = new System.Windows.Forms.GroupBox();
-            this.signinLabel = new System.Windows.Forms.Label();
-            this.signinButton = new System.Windows.Forms.Button();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.timeGroupBox = new System.Windows.Forms.GroupBox();
@@ -47,7 +45,6 @@
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.applyButton = new System.Windows.Forms.Button();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.redditGroupBox.SuspendLayout();
             this.timeGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secondsNumeric)).BeginInit();
@@ -57,50 +54,28 @@
             // 
             // redditGroupBox
             // 
-            this.redditGroupBox.Controls.Add(this.signinLabel);
-            this.redditGroupBox.Controls.Add(this.signinButton);
             this.redditGroupBox.Controls.Add(this.passwordTextBox);
             this.redditGroupBox.Controls.Add(this.usernameTextBox);
             this.redditGroupBox.Location = new System.Drawing.Point(12, 12);
             this.redditGroupBox.Name = "redditGroupBox";
-            this.redditGroupBox.Size = new System.Drawing.Size(218, 71);
+            this.redditGroupBox.Size = new System.Drawing.Size(218, 45);
             this.redditGroupBox.TabIndex = 0;
             this.redditGroupBox.TabStop = false;
             this.redditGroupBox.Text = "Reddit";
-            // 
-            // signinLabel
-            // 
-            this.signinLabel.AutoSize = true;
-            this.signinLabel.Location = new System.Drawing.Point(126, 48);
-            this.signinLabel.Name = "signinLabel";
-            this.signinLabel.Size = new System.Drawing.Size(69, 13);
-            this.signinLabel.TabIndex = 4;
-            this.signinLabel.Text = "Not signed in";
-            // 
-            // signinButton
-            // 
-            this.signinButton.Enabled = false;
-            this.signinButton.Location = new System.Drawing.Point(126, 17);
-            this.signinButton.Name = "signinButton";
-            this.signinButton.Size = new System.Drawing.Size(86, 23);
-            this.signinButton.TabIndex = 3;
-            this.signinButton.Text = "Sign In";
-            this.signinButton.UseVisualStyleBackColor = true;
-            this.signinButton.Click += new System.EventHandler(this.signinButton_Click);
             // 
             // passwordTextBox
             // 
             this.passwordTextBox.AccessibleName = "Password";
             this.passwordTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.passwordTextBox.Location = new System.Drawing.Point(6, 45);
+            this.passwordTextBox.Location = new System.Drawing.Point(112, 19);
             this.passwordTextBox.MaxLength = 250;
             this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(114, 20);
+            this.passwordTextBox.Size = new System.Drawing.Size(100, 20);
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.Text = "Password";
             this.passwordTextBox.UseSystemPasswordChar = true;
             this.passwordTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.passwordTextBox.TextChanged += new System.EventHandler(this.passwordTextBox_TextChanged);
+            this.passwordTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.passwordTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
             this.passwordTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
@@ -111,11 +86,11 @@
             this.usernameTextBox.Location = new System.Drawing.Point(6, 19);
             this.usernameTextBox.MaxLength = 20;
             this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(114, 20);
+            this.usernameTextBox.Size = new System.Drawing.Size(100, 20);
             this.usernameTextBox.TabIndex = 1;
             this.usernameTextBox.Text = "Username";
             this.usernameTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.usernameTextBox.TextChanged += new System.EventHandler(this.usernameTextBox_TextChanged);
+            this.usernameTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             this.usernameTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
             this.usernameTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
@@ -130,7 +105,7 @@
             this.timeGroupBox.Controls.Add(this.secondsNumeric);
             this.timeGroupBox.Controls.Add(this.minutesNumeric);
             this.timeGroupBox.Controls.Add(this.hoursNumeric);
-            this.timeGroupBox.Location = new System.Drawing.Point(12, 89);
+            this.timeGroupBox.Location = new System.Drawing.Point(12, 63);
             this.timeGroupBox.Name = "timeGroupBox";
             this.timeGroupBox.Size = new System.Drawing.Size(218, 114);
             this.timeGroupBox.TabIndex = 1;
@@ -245,7 +220,7 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(12, 209);
+            this.okButton.Location = new System.Drawing.Point(12, 183);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(69, 23);
             this.okButton.TabIndex = 2;
@@ -255,7 +230,7 @@
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(87, 209);
+            this.cancelButton.Location = new System.Drawing.Point(87, 183);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(69, 23);
             this.cancelButton.TabIndex = 3;
@@ -265,7 +240,7 @@
             // applyButton
             // 
             this.applyButton.Enabled = false;
-            this.applyButton.Location = new System.Drawing.Point(162, 209);
+            this.applyButton.Location = new System.Drawing.Point(162, 183);
             this.applyButton.Name = "applyButton";
             this.applyButton.Size = new System.Drawing.Size(68, 23);
             this.applyButton.TabIndex = 4;
@@ -273,18 +248,13 @@
             this.applyButton.UseVisualStyleBackColor = true;
             this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
             // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
             // SettingsWindow
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(242, 244);
+            this.ClientSize = new System.Drawing.Size(242, 218);
             this.Controls.Add(this.applyButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
@@ -329,8 +299,5 @@
         private System.Windows.Forms.Label warningLabel;
         private System.Windows.Forms.TextBox usernameTextBox;
         private System.Windows.Forms.TextBox passwordTextBox;
-        private System.Windows.Forms.Label signinLabel;
-        private System.Windows.Forms.Button signinButton;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
     }
 }
