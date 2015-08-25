@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Security.Authentication;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Paperwallz.Properties;
@@ -30,7 +31,7 @@ namespace Paperwallz
         private readonly string[] essentialDlls = { "HtmlAgilityPack.dll", "Newtonsoft.Json.dll", "RedditSharp.dll" };
         private const string clientId = "8ee17b899ab80c3";
         private readonly Imgur imgur = new Imgur(clientId);
-        private Reddit reddit;
+        private Subreddit wallpapers;
         private bool signedin;
 
         public MainWindow()
@@ -86,7 +87,7 @@ namespace Paperwallz
 
         private void UpdateSwitch()
         {
-            switchButton.Enabled = timer.Enabled || settingsWindow.GotCredentials() && queueList.Items.Count > 0;
+            switchButton.Enabled = timer.Enabled || (settingsWindow.GotCredentials() && queueList.Items.Count > 0);
         }
 
         private void ReadConfig()
@@ -227,16 +228,24 @@ namespace Paperwallz
 
             if (!signedin)
             {
-                reddit = new Reddit(args.Username, args.Password);
-                signedin = true;
+                try
+                {
+                    wallpapers = new Reddit(args.Username, args.Password).GetSubreddit("wallpapers");
+                    signedin = true;
+                }
+                catch (AuthenticationException)
+                {
+                    e.Result = "Bad username/password combination.";
+                    return;
+                }
             }
 
             string description = "This image was uploaded using Paperwallz by /u/foxneZz. OP: /u/" + args.Username;
 
             var image = args.IsUrl ? imgur.Upload(args.File, args.Title, description)
-                                    : imgur.Upload(new Bitmap(args.File), args.Title, description);
+                                   : imgur.Upload(new Bitmap(args.File), args.Title, description);
 
-            reddit.GetSubreddit("wallpapers").SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+            wallpapers.SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
 
             e.Result = "Noice";
         }
@@ -249,10 +258,14 @@ namespace Paperwallz
             if (result != "Noice")
             {
                 SwitchPosting(false);
+
                 timeLeft = TimeSpan.Zero;
                 UpdateTime();
+
                 queueList.Items.Insert(0, beingSubmitted);
                 UpdateListNumbers();
+                UpdateSwitch();
+
                 MessageBox.Show(result, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
