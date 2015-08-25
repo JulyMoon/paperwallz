@@ -12,7 +12,7 @@ using Paperwallz.Properties;
 using RedditSharp;
 using RedditSharp.Things;
 
-// TODO: reddit
+// TODO: exceptions
 
 namespace Paperwallz
 {
