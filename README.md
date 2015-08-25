@@ -1,4 +1,18 @@
 # Paperwallz
-A tool that hosts an image on imgur.com and then submits it to /r/wallpapers
 
-requires python 3, praw and imgurpython installed
+Karma reaping tool
+
+What it does:
+
+Posts your wallpapers to /r/wallpapers with delay inbetween
+
+How to use:
+
+1. Find some good lookin' wallpapers
+2. Come up with a title for each one
+3. Add them wallpapers to the queue
+4. Enter your Reddit username & password
+5. Set submission delay
+5. Press START
+6. ?????
+7. PROFIT! :D
