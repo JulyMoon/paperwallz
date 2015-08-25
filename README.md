@@ -1,4 +1,4 @@
-# Paperwallz
+# Paperwallz (beta)
 
 Karma reaping tool
 
