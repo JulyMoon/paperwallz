@@ -12,7 +12,7 @@ using Paperwallz.Properties;
 using RedditSharp;
 using RedditSharp.Things;
 
-// TODO: exceptions
+// TODO: exception handling
 
 namespace Paperwallz
 {
@@ -27,10 +27,11 @@ namespace Paperwallz
         private TimeSpan maxTime;
         private bool submitting;
         private ListViewItem beingSubmitted;
+        private readonly string[] essentialDlls = { "HtmlAgilityPack.dll", "Newtonsoft.Json.dll", "RedditSharp.dll" };
         private const string clientId = "8ee17b899ab80c3";
-        private readonly string[] essentialDlls = {"HtmlAgilityPack.dll", "Newtonsoft.Json.dll", "RedditSharp.dll"};
         private readonly Imgur imgur = new Imgur(clientId);
-        private Subreddit wallpapers;
+        private Reddit reddit;
+        private bool signedin;
 
         public MainWindow()
         {
@@ -85,13 +86,13 @@ namespace Paperwallz
 
         private void UpdateSwitch()
         {
-            switchButton.Enabled = timer.Enabled || settingsWindow.Signedin && queueList.Items.Count > 0;
+            switchButton.Enabled = timer.Enabled || settingsWindow.GotCredentials() && queueList.Items.Count > 0;
         }
 
         private void ReadConfig()
         {
-            //settingsWindow.Username = Settings.Default.username; TODO
-            //settingsWindow.Password = Settings.Default.password;
+            settingsWindow.Username = Settings.Default.username;
+            settingsWindow.Password = Settings.Default.password;
 
             maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
 
@@ -159,19 +160,10 @@ namespace Paperwallz
             return textbox.ForeColor == SystemColors.WindowText && textbox.Text.Length > 0;
         }
 
-        private struct ScriptArgs
+        private struct ScriptArgs // maybe we can access these variables directly in DoWork?
         {
-            public readonly bool isUrl;
-            public readonly string title, file;
-            public readonly Subreddit subreddit;
-
-            public ScriptArgs(string title, string file, Subreddit subreddit, bool isUrl)
-            {
-                this.title = title;
-                this.file = file;
-                this.subreddit = subreddit;
-                this.isUrl = isUrl;
-            }
+            public bool IsUrl;
+            public string Title, File, Username, Password;
         }
 
         private void browseButton_Click(object sender, EventArgs e)
@@ -182,6 +174,7 @@ namespace Paperwallz
             string filename = Path.GetFileName(openFileDialog.FileName);
 
             const int maxFilenameLength = 29;
+
             // ReSharper disable once PossibleNullReferenceException
             filenameLabel.Text = filename.Length > maxFilenameLength ?
                 filename.Substring(0, maxFilenameLength - 3) + "..." : filename;
@@ -232,9 +225,18 @@ namespace Paperwallz
         {
             var args = (ScriptArgs)e.Argument;
 
-            var image = args.isUrl ? imgur.Upload(args.file, args.title, "test") : imgur.Upload(new Bitmap(args.file), args.title, "test");
+            if (!signedin)
+            {
+                reddit = new Reddit(args.Username, args.Password);
+                signedin = true;
+            }
 
-            args.subreddit.SubmitPost(args.title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+            string description = "This image was uploaded using Paperwallz by /u/foxneZz. OP: /u/" + args.Username;
+
+            var image = args.IsUrl ? imgur.Upload(args.File, args.Title, description)
+                                    : imgur.Upload(new Bitmap(args.File), args.Title, description);
+
+            reddit.GetSubreddit("wallpapers").SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
 
             e.Result = "Noice";
         }
@@ -400,7 +402,14 @@ namespace Paperwallz
                     }
                 }
 
-                backgroundWorker.RunWorkerAsync(new ScriptArgs(beingSubmitted.SubItems[1].Text, file, wallpapers, isUrl));
+                backgroundWorker.RunWorkerAsync(new ScriptArgs
+                {
+                    Title = beingSubmitted.SubItems[1].Text,
+                    File = file,
+                    IsUrl = isUrl,
+                    Username = settingsWindow.Username,
+                    Password = settingsWindow.Password
+                });
             }
 
             UpdateTitle();
@@ -467,9 +476,7 @@ namespace Paperwallz
             
             maxTime = settingsWindow.Timespan;
             timeLeft = TimeSpan.Zero;
-
-            if (settingsWindow.Signedin)
-                wallpapers = settingsWindow.GetWallpapers();
+            signedin = false; // so lazy
 
             UpdateTime();
             UpdateSwitch();

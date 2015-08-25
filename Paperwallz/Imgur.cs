@@ -22,7 +22,7 @@ namespace Paperwallz
 
         private void InitWebClient()
         {
-            client = new WebClient {BaseAddress = endPoint};
+            client = new WebClient { BaseAddress = endPoint };
             client.Headers[HttpRequestHeader.Authorization] = "Client-ID " + ClientID;
         }
 
@@ -98,5 +98,22 @@ namespace Paperwallz
         {
             return InternalUpload(url, true, title, description);
         }
+
+        public static bool operator ==(Imgur a, Imgur b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (((object)a == null) || ((object)b == null))
+                return false;
+
+            return a.ClientID == b.ClientID;
+        }
+
+        public static bool operator !=(Imgur a, Imgur b)
+        {
+            return !(a == b);
+        }
+
     }
 }

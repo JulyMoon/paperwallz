@@ -1,26 +1,27 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using RedditSharp;
-using RedditSharp.Things;
 
 namespace Paperwallz
 {
     public partial class SettingsWindow : Form
     {
         private decimal oldHours, oldMinutes, oldSeconds;
+        private string oldUsername, oldPassword;
         private TimeSpan timespan;
         private static readonly TimeSpan minimum = TimeSpan.FromSeconds(20);
-        private bool gotUsername, gotPassword;
-        private Reddit reddit;
-        public bool Signedin { get; private set; }
-        private string username;
-        private string password;
 
-        public string Username { get { return username; } set { SetText(usernameTextBox, value); } }
-        public string Password { get { return password; } set { SetText(passwordTextBox, value); } }
+        public string Username
+        {
+            get { return GetText(usernameTextBox); }
+            set { SetText(usernameTextBox, value); }
+        }
+
+        public string Password
+        {
+            get { return GetText(passwordTextBox); }
+            set { SetText(passwordTextBox, value); }
+        }
 
         public TimeSpan Timespan
         {
@@ -39,9 +40,9 @@ namespace Paperwallz
             InitializeComponent();
         }
 
-        public Subreddit GetWallpapers()
+        private void TextBox_TextChanged(object sender, EventArgs e)
         {
-            return reddit.GetSubreddit("wallpapers");
+            UpdateApply();
         }
 
         private void TextBox_Enter(object sender, EventArgs e)
@@ -95,7 +96,9 @@ namespace Paperwallz
         {
             applyButton.Enabled = oldHours != hoursNumeric.Value ||
                                   oldMinutes != minutesNumeric.Value ||
-                                  oldSeconds != secondsNumeric.Value;
+                                  oldSeconds != secondsNumeric.Value ||
+                                  oldUsername != GetText(usernameTextBox) ||
+                                  oldPassword != GetText(passwordTextBox);
         }
 
         private void SettingsWindow_Shown(object sender, EventArgs e)
@@ -114,6 +117,8 @@ namespace Paperwallz
             oldHours = hoursNumeric.Value;
             oldMinutes = minutesNumeric.Value;
             oldSeconds = secondsNumeric.Value;
+            oldUsername = GetText(usernameTextBox);
+            oldPassword = GetText(passwordTextBox);
             applyButton.Enabled = false;
         }
 
@@ -159,6 +164,8 @@ namespace Paperwallz
                 hoursNumeric.Value = oldHours;
                 minutesNumeric.Value = oldMinutes;
                 secondsNumeric.Value = oldSeconds;
+                SetText(usernameTextBox, oldUsername);
+                SetText(passwordTextBox, oldPassword);
             }
 
             timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
@@ -172,83 +179,14 @@ namespace Paperwallz
             }
         }
 
+        public bool GotCredentials()
+        {
+            return MainWindow.HasText(usernameTextBox) && MainWindow.HasText(passwordTextBox);
+        }
+
         private void applyButton_Click(object sender, EventArgs e)
         {
             Apply();
-        }
-
-        private void UpdateSigninButton()
-        {
-            signinButton.Enabled = gotUsername && gotPassword;
-        }
-
-        private void usernameTextBox_TextChanged(object sender, EventArgs e)
-        {
-            gotUsername = MainWindow.HasText(usernameTextBox);
-            UpdateSigninButton();
-        }
-
-        private void passwordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            gotPassword = MainWindow.HasText(passwordTextBox);
-            UpdateSigninButton();
-        }
-
-        private void signinButton_Click(object sender, EventArgs e)
-        {
-            if (!Signedin)
-            {
-                signinButton.Enabled = false;
-                signinLabel.Text = "Signing in...";
-                backgroundWorker.RunWorkerAsync(new Credentials(GetText(usernameTextBox), GetText(passwordTextBox)));
-            }
-        }
-
-        private struct Credentials
-        {
-            public readonly string Username, Password;
-
-            public Credentials(string username, string password)
-            {
-                Username = username;
-                Password = password;
-            }
-        }
-
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var args = (Credentials)e.Argument;
-
-            Reddit reddit_;
-
-            try
-            {
-                reddit_ = new Reddit(args.Username, args.Password);
-                username = args.Username;
-                password = args.Password;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Message: " + ex.Message + "\nSource: " + ex.Source + "\nStacktrace: " + ex.StackTrace);
-                reddit_ = null;
-            }
-
-            e.Result = reddit_;
-        }
-
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result != null)
-            {
-                signinLabel.Text = "Signed in";
-                signinButton.Enabled = true;
-                reddit = (Reddit)e.Result;
-                Signedin = true;
-            }
-            else
-            {
-                Signedin = false;
-            }
         }
     }
 }
