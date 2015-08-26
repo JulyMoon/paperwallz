@@ -71,7 +71,7 @@ namespace Paperwallz
             return queueList.Items[index].SubItems[2].Text;
         }
 
-        private static bool IsUrl(string s)
+        private static bool IsValidUrl(string s)
         {
             return s.StartsWith("http");
         }
@@ -335,7 +335,7 @@ namespace Paperwallz
             Settings.Default.Save();
         }
 
-        private void addButton_Click(object sender, EventArgs e)
+        private void addButton_Click(object sender, EventArgs e) // TODO: validate
         {
             string number = (queueList.Items.Count + 1).ToString();
             string title = titleTextBox.Text;
@@ -401,7 +401,7 @@ namespace Paperwallz
                 }
 
                 string file = beingSubmitted.SubItems[2].Text;
-                bool isUrl = IsUrl(beingSubmitted.SubItems[2].Text);
+                bool isUrl = IsValidUrl(beingSubmitted.SubItems[2].Text);
 
                 if (isUrl && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
                 {
@@ -523,7 +523,7 @@ namespace Paperwallz
 
         private void queueList_ItemActivate(object sender, EventArgs e)
         {
-            if (IsUrl(queueList.Items[selectedIndex].SubItems[2].Text))
+            if (IsValidUrl(queueList.Items[selectedIndex].SubItems[2].Text))
                 Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw an exception
         }
 
