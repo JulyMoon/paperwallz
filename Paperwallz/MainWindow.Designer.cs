@@ -217,9 +217,9 @@ namespace Paperwallz
             // addButton
             // 
             this.addButton.Enabled = false;
-            this.addButton.Location = new System.Drawing.Point(129, 112);
+            this.addButton.Location = new System.Drawing.Point(125, 114);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(181, 27);
+            this.addButton.Size = new System.Drawing.Size(185, 24);
             this.addButton.TabIndex = 14;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
@@ -228,9 +228,9 @@ namespace Paperwallz
             // removeButton
             // 
             this.removeButton.Enabled = false;
-            this.removeButton.Location = new System.Drawing.Point(12, 112);
+            this.removeButton.Location = new System.Drawing.Point(12, 114);
             this.removeButton.Name = "removeButton";
-            this.removeButton.Size = new System.Drawing.Size(111, 27);
+            this.removeButton.Size = new System.Drawing.Size(107, 24);
             this.removeButton.TabIndex = 15;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
@@ -302,7 +302,7 @@ namespace Paperwallz
             // 
             this.titleTextBox.AccessibleName = "The title goes here";
             this.titleTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.titleTextBox.Location = new System.Drawing.Point(12, 83);
+            this.titleTextBox.Location = new System.Drawing.Point(12, 84);
             this.titleTextBox.MaxLength = 250;
             this.titleTextBox.Name = "titleTextBox";
             this.titleTextBox.Size = new System.Drawing.Size(298, 20);
@@ -335,6 +335,7 @@ namespace Paperwallz
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(1000, 304);
+            this.MinimumSize = new System.Drawing.Size(530, 304);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paperwallz";
