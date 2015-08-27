@@ -263,12 +263,12 @@ namespace Paperwallz
             // 
             // timeLeftLabel
             // 
-            this.timeLeftLabel.AutoSize = true;
-            this.timeLeftLabel.Location = new System.Drawing.Point(258, 176);
+            this.timeLeftLabel.Location = new System.Drawing.Point(164, 176);
             this.timeLeftLabel.Name = "timeLeftLabel";
-            this.timeLeftLabel.Size = new System.Drawing.Size(49, 13);
+            this.timeLeftLabel.Size = new System.Drawing.Size(146, 13);
             this.timeLeftLabel.TabIndex = 19;
             this.timeLeftLabel.Text = "00:00:00";
+            this.timeLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // settingsButton
             // 

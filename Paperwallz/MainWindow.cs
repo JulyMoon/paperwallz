@@ -226,28 +226,35 @@ namespace Paperwallz
         {
             var args = (ScriptArgs)e.Argument;
 
-            if (!signedin)
+            try
             {
-                try
+                if (!signedin)
                 {
-                    wallpapers = new Reddit(args.Username, args.Password).GetSubreddit("wallpapers");
-                    signedin = true;
+                    try
+                    {
+                        wallpapers = new Reddit(args.Username, args.Password).GetSubreddit("wallpapers");
+                        signedin = true;
+                    }
+                    catch (AuthenticationException)
+                    {
+                        e.Result = "Bad username/password combination.";
+                        return;
+                    }
                 }
-                catch (AuthenticationException)
-                {
-                    e.Result = "Bad username/password combination.";
-                    return;
-                }
+
+                string description = "This image was uploaded using Paperwallz by /u/foxneZz. OP: /u/" + args.Username;
+
+                var image = args.IsUrl ? imgur.Upload(args.File, args.Title, description)
+                                       : imgur.Upload(new Bitmap(args.File), args.Title, description);
+
+                wallpapers.SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+
+                e.Result = "Noice";
             }
-
-            string description = "This image was uploaded using Paperwallz by /u/foxneZz. OP: /u/" + args.Username;
-
-            var image = args.IsUrl ? imgur.Upload(args.File, args.Title, description)
-                                   : imgur.Upload(new Bitmap(args.File), args.Title, description);
-
-            wallpapers.SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
-
-            e.Result = "Noice";
+            catch (Exception ex)
+            {
+                e.Result = "Exception: " + ex + "\nMessage: " + ex.Message + "\nSource: " + ex.Source + "\nStackTrace: " + ex.StackTrace;
+            }
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -443,7 +450,17 @@ namespace Paperwallz
 
         private void UpdateTimeLabel()
         {
-            timeLeftLabel.Text = timeLeft.ToString();
+            timeLeftLabel.Text = ReadableTime(timeLeft);
+        }
+
+        private static string ReadableTime(TimeSpan time)
+        {
+            return time.Hours + ":" + TwoDigits(time.Minutes) + ":" + TwoDigits(time.Seconds);
+        }
+
+        private static string TwoDigits(int number)
+        {
+            return number < 10 ? "0" + number : number.ToString();
         }
 
         private void switchButton_Click(object sender, EventArgs e)
@@ -454,7 +471,7 @@ namespace Paperwallz
         private void UpdateTitle()
         {
             notifyIcon.Text = Text = Application.ProductName +
-                                     (timer.Enabled ? " [ON] [" + timeLeft + "]" : " [OFF]") +
+                                     (timer.Enabled ? " [ON] [" + ReadableTime(timeLeft) + "]" : " [OFF]") +
                                      (submitting ? " [Submitting]" : "");
         }
 
