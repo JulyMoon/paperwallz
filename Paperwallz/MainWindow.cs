@@ -502,20 +502,21 @@ namespace Paperwallz
 
         private void ShowSettingsWindow()
         {
-            var oldTimespan = settingsWindow.Timespan;
             var oldPassword = settingsWindow.Password;
             var oldUsername = settingsWindow.Username;
 
             settingsWindow.ShowDialog();
             
             maxTime = settingsWindow.Timespan;
-            if (maxTime < oldTimespan)
+            if (maxTime < timeLeft)
                 timeLeft = maxTime;
 
             if (oldUsername != settingsWindow.Username || oldPassword != settingsWindow.Password)
                 signedin = false;
 
-            UpdateTime();
+            UpdateTime(); // this causes slight timeleft changes whenever maxtime is changed
+                          // the bigger the trackbar.maximum the better the precision
+
             UpdateSwitch();
         }
 

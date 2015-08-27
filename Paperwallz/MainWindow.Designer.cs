@@ -85,7 +85,7 @@ namespace Paperwallz
             this.urlTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.urlTextBox.Location = new System.Drawing.Point(84, 9);
             this.urlTextBox.Name = "urlTextBox";
-            this.urlTextBox.Size = new System.Drawing.Size(200, 20);
+            this.urlTextBox.Size = new System.Drawing.Size(234, 20);
             this.urlTextBox.TabIndex = 5;
             this.urlTextBox.Text = "Image url";
             this.urlTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
@@ -95,9 +95,9 @@ namespace Paperwallz
             // 
             // openButton
             // 
-            this.openButton.Location = new System.Drawing.Point(107, 228);
+            this.openButton.Location = new System.Drawing.Point(93, 161);
             this.openButton.Name = "openButton";
-            this.openButton.Size = new System.Drawing.Size(90, 24);
+            this.openButton.Size = new System.Drawing.Size(75, 24);
             this.openButton.TabIndex = 10;
             this.openButton.Text = "Open";
             this.openButton.UseVisualStyleBackColor = true;
@@ -105,9 +105,9 @@ namespace Paperwallz
             // 
             // aboutButton
             // 
-            this.aboutButton.Location = new System.Drawing.Point(12, 228);
+            this.aboutButton.Location = new System.Drawing.Point(12, 161);
             this.aboutButton.Name = "aboutButton";
-            this.aboutButton.Size = new System.Drawing.Size(89, 24);
+            this.aboutButton.Size = new System.Drawing.Size(75, 24);
             this.aboutButton.TabIndex = 8;
             this.aboutButton.Text = "About";
             this.aboutButton.UseVisualStyleBackColor = true;
@@ -135,7 +135,7 @@ namespace Paperwallz
             this.imageControl.Location = new System.Drawing.Point(12, 12);
             this.imageControl.Name = "imageControl";
             this.imageControl.SelectedIndex = 0;
-            this.imageControl.Size = new System.Drawing.Size(298, 62);
+            this.imageControl.Size = new System.Drawing.Size(332, 62);
             this.imageControl.TabIndex = 11;
             this.imageControl.SelectedIndexChanged += new System.EventHandler(this.imageControl_SelectedIndexChanged);
             // 
@@ -147,7 +147,7 @@ namespace Paperwallz
             this.urlTab.Location = new System.Drawing.Point(4, 22);
             this.urlTab.Name = "urlTab";
             this.urlTab.Padding = new System.Windows.Forms.Padding(3);
-            this.urlTab.Size = new System.Drawing.Size(290, 36);
+            this.urlTab.Size = new System.Drawing.Size(324, 36);
             this.urlTab.TabIndex = 0;
             this.urlTab.Text = "Upload from the internet";
             // 
@@ -159,7 +159,7 @@ namespace Paperwallz
             this.pcTab.Location = new System.Drawing.Point(4, 22);
             this.pcTab.Name = "pcTab";
             this.pcTab.Padding = new System.Windows.Forms.Padding(3);
-            this.pcTab.Size = new System.Drawing.Size(290, 36);
+            this.pcTab.Size = new System.Drawing.Size(324, 36);
             this.pcTab.TabIndex = 1;
             this.pcTab.Text = "Upload from this PC";
             // 
@@ -176,9 +176,8 @@ namespace Paperwallz
             // 
             this.queueList.Activation = System.Windows.Forms.ItemActivation.TwoClick;
             this.queueList.AllowColumnReorder = true;
-            this.queueList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.queueList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.queueList.AutoArrange = false;
             this.queueList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.numberColumn,
@@ -187,10 +186,10 @@ namespace Paperwallz
             this.queueList.FullRowSelect = true;
             this.queueList.GridLines = true;
             this.queueList.HideSelection = false;
-            this.queueList.Location = new System.Drawing.Point(316, 12);
+            this.queueList.Location = new System.Drawing.Point(12, 191);
             this.queueList.MultiSelect = false;
             this.queueList.Name = "queueList";
-            this.queueList.Size = new System.Drawing.Size(298, 240);
+            this.queueList.Size = new System.Drawing.Size(332, 159);
             this.queueList.TabIndex = 13;
             this.queueList.UseCompatibleStateImageBehavior = false;
             this.queueList.View = System.Windows.Forms.View.Details;
@@ -202,24 +201,24 @@ namespace Paperwallz
             // numberColumn
             // 
             this.numberColumn.Text = "#";
-            this.numberColumn.Width = 32;
+            this.numberColumn.Width = 23;
             // 
             // titleColumn
             // 
             this.titleColumn.Text = "Title";
-            this.titleColumn.Width = 131;
+            this.titleColumn.Width = 110;
             // 
             // fileColumn
             // 
             this.fileColumn.Text = "File";
-            this.fileColumn.Width = 131;
+            this.fileColumn.Width = 300;
             // 
             // addButton
             // 
             this.addButton.Enabled = false;
-            this.addButton.Location = new System.Drawing.Point(125, 114);
+            this.addButton.Location = new System.Drawing.Point(255, 80);
             this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(185, 24);
+            this.addButton.Size = new System.Drawing.Size(89, 24);
             this.addButton.TabIndex = 14;
             this.addButton.Text = "Add";
             this.addButton.UseVisualStyleBackColor = true;
@@ -228,9 +227,9 @@ namespace Paperwallz
             // removeButton
             // 
             this.removeButton.Enabled = false;
-            this.removeButton.Location = new System.Drawing.Point(12, 114);
+            this.removeButton.Location = new System.Drawing.Point(190, 80);
             this.removeButton.Name = "removeButton";
-            this.removeButton.Size = new System.Drawing.Size(107, 24);
+            this.removeButton.Size = new System.Drawing.Size(59, 24);
             this.removeButton.TabIndex = 15;
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
@@ -239,9 +238,9 @@ namespace Paperwallz
             // switchButton
             // 
             this.switchButton.Enabled = false;
-            this.switchButton.Location = new System.Drawing.Point(203, 198);
+            this.switchButton.Location = new System.Drawing.Point(255, 161);
             this.switchButton.Name = "switchButton";
-            this.switchButton.Size = new System.Drawing.Size(107, 54);
+            this.switchButton.Size = new System.Drawing.Size(89, 24);
             this.switchButton.TabIndex = 16;
             this.switchButton.Text = "Start";
             this.switchButton.UseVisualStyleBackColor = true;
@@ -255,7 +254,7 @@ namespace Paperwallz
             // descriptiveLabel
             // 
             this.descriptiveLabel.AutoSize = true;
-            this.descriptiveLabel.Location = new System.Drawing.Point(9, 176);
+            this.descriptiveLabel.Location = new System.Drawing.Point(12, 140);
             this.descriptiveLabel.Name = "descriptiveLabel";
             this.descriptiveLabel.Size = new System.Drawing.Size(149, 13);
             this.descriptiveLabel.TabIndex = 18;
@@ -263,18 +262,18 @@ namespace Paperwallz
             // 
             // timeLeftLabel
             // 
-            this.timeLeftLabel.Location = new System.Drawing.Point(164, 176);
+            this.timeLeftLabel.Location = new System.Drawing.Point(167, 140);
             this.timeLeftLabel.Name = "timeLeftLabel";
-            this.timeLeftLabel.Size = new System.Drawing.Size(146, 13);
+            this.timeLeftLabel.Size = new System.Drawing.Size(177, 13);
             this.timeLeftLabel.TabIndex = 19;
             this.timeLeftLabel.Text = "00:00:00";
             this.timeLeftLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // settingsButton
             // 
-            this.settingsButton.Location = new System.Drawing.Point(12, 198);
+            this.settingsButton.Location = new System.Drawing.Point(174, 161);
             this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Size = new System.Drawing.Size(185, 24);
+            this.settingsButton.Size = new System.Drawing.Size(75, 24);
             this.settingsButton.TabIndex = 20;
             this.settingsButton.Text = "Settings";
             this.settingsButton.UseVisualStyleBackColor = true;
@@ -290,10 +289,10 @@ namespace Paperwallz
             // trackBar
             // 
             this.trackBar.BackColor = System.Drawing.SystemColors.Control;
-            this.trackBar.Location = new System.Drawing.Point(5, 147);
-            this.trackBar.Maximum = 300;
+            this.trackBar.Location = new System.Drawing.Point(12, 108);
+            this.trackBar.Maximum = 3000;
             this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(312, 45);
+            this.trackBar.Size = new System.Drawing.Size(332, 45);
             this.trackBar.TabIndex = 21;
             this.trackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar.ValueChanged += new System.EventHandler(this.trackBar_ValueChanged);
@@ -302,10 +301,10 @@ namespace Paperwallz
             // 
             this.titleTextBox.AccessibleName = "The title goes here";
             this.titleTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.titleTextBox.Location = new System.Drawing.Point(12, 84);
+            this.titleTextBox.Location = new System.Drawing.Point(12, 82);
             this.titleTextBox.MaxLength = 250;
             this.titleTextBox.Name = "titleTextBox";
-            this.titleTextBox.Size = new System.Drawing.Size(298, 20);
+            this.titleTextBox.Size = new System.Drawing.Size(172, 20);
             this.titleTextBox.TabIndex = 22;
             this.titleTextBox.Text = "The title goes here";
             this.titleTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
@@ -318,7 +317,7 @@ namespace Paperwallz
             this.AcceptButton = this.addButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 265);
+            this.ClientSize = new System.Drawing.Size(356, 362);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.timeLeftLabel);
@@ -334,8 +333,8 @@ namespace Paperwallz
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 304);
-            this.MinimumSize = new System.Drawing.Size(530, 304);
+            this.MaximumSize = new System.Drawing.Size(372, 900);
+            this.MinimumSize = new System.Drawing.Size(372, 303);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Paperwallz";
