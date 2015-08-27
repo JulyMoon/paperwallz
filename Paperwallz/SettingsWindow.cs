@@ -9,7 +9,7 @@ namespace Paperwallz
         private decimal oldHours, oldMinutes, oldSeconds;
         private string oldUsername, oldPassword;
         private TimeSpan timespan;
-        private static readonly TimeSpan minimum = TimeSpan.FromSeconds(20);
+        private static readonly TimeSpan minimum = TimeSpan.FromSeconds(30);
 
         public string Username
         {

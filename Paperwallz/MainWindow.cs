@@ -502,11 +502,18 @@ namespace Paperwallz
 
         private void ShowSettingsWindow()
         {
+            var oldTimespan = settingsWindow.Timespan;
+            var oldPassword = settingsWindow.Password;
+            var oldUsername = settingsWindow.Username;
+
             settingsWindow.ShowDialog();
             
             maxTime = settingsWindow.Timespan;
-            timeLeft = TimeSpan.Zero;
-            signedin = false; // so lazy
+            if (maxTime < oldTimespan)
+                timeLeft = maxTime;
+
+            if (oldUsername != settingsWindow.Username || oldPassword != settingsWindow.Password)
+                signedin = false;
 
             UpdateTime();
             UpdateSwitch();
