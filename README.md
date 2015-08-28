@@ -1,7 +1,5 @@
 # Paperwallz (beta)
 
-Karma reaping tool
-
 What it does:
 
 Posts your wallpapers to /r/wallpapers with delay inbetween

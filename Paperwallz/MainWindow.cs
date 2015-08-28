@@ -246,8 +246,26 @@ namespace Paperwallz
 
                 var image = args.IsUrl ? imgur.Upload(args.File, args.Title, description)
                                        : imgur.Upload(new Bitmap(args.File), args.Title, description);
+                
+                int i = 0;
+                while (true)
+                {
+                    if (i == 5)
+                    {
+                        e.Result = "I can't post your wallpaper. I don't know why :(";
+                        return;
+                    }
 
-                wallpapers.SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+                    try
+                    {
+                        wallpapers.SubmitPost(args.Title + " [" + image.Width + "×" + image.Height + "]", image.Link.ToString());
+                        break;
+                    }
+                    catch (WebException)
+                    {
+                        i++;
+                    }
+                }
 
                 e.Result = "Noice";
             }
@@ -471,8 +489,8 @@ namespace Paperwallz
         private void UpdateTitle()
         {
             notifyIcon.Text = Text = Application.ProductName +
-                                     (timer.Enabled ? " [ON] [" + ReadableTime(timeLeft) + "]" : " [OFF]") +
-                                     (submitting ? " [Submitting]" : "");
+                                     (timer.Enabled ? " - ON - " + ReadableTime(timeLeft) : " - OFF") +
+                                     (submitting ? " - S" : "");
         }
 
         private void SwitchPosting(bool start)
