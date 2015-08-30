@@ -74,7 +74,7 @@ namespace Paperwallz
 
         private static bool IsValidUrl(string s)
         {
-            return s.StartsWith("http");
+            return s.Substring(1, 2) != ":\\";
         }
 
         private static string[] Separate(string pair)
@@ -175,7 +175,7 @@ namespace Paperwallz
 
             string filename = Path.GetFileName(openFileDialog.FileName);
 
-            const int maxFilenameLength = 29;
+            const int maxFilenameLength = 29; // this is outdated. TODO: find the new value
 
             // ReSharper disable once PossibleNullReferenceException
             filenameLabel.Text = filename.Length > maxFilenameLength ?
@@ -363,15 +363,39 @@ namespace Paperwallz
 
         private void addButton_Click(object sender, EventArgs e) // TODO: validate
         {
+            string file;
+
+            if (imageControl.SelectedIndex == 0)
+            {
+                file = urlTextBox.Text.Trim();
+                if (!Uri.IsWellFormedUriString(file, UriKind.Absolute))
+                {
+                    MessageBox.Show("Something's wrong with your url. Perhaps you're missing the \"http\" part.",
+                        "Invalid url", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else
+                file = openFileDialog.FileName;
+
+            foreach (ListViewItem item in queueList.Items)
+                if (file == item.SubItems[2].Text)
+                {
+                    MessageBox.Show("You've already added this wallpaper.", "This wallpaper is already in queue",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
             string number = (queueList.Items.Count + 1).ToString();
             string title = titleTextBox.Text;
-            var file = imageControl.SelectedIndex == 0 ? urlTextBox.Text : openFileDialog.FileName;
 
             queueList.Items.Add(new ListViewItem(new[] {number, title, file}));
             UpdateSwitch();
 
             if (imageControl.SelectedIndex == 0)
                 SettingsWindow.SetText(urlTextBox, "");
+            else
+                openFileDialog.FileName = filenameLabel.Text = "";
 
             SettingsWindow.SetText(titleTextBox, "");
         }
