@@ -33,6 +33,7 @@ namespace Paperwallz
         private readonly Imgur imgur = new Imgur(clientId);
         private Subreddit wallpapers;
         private bool signedin;
+        private bool settingsChangedTime;
 
         public MainWindow()
         {
@@ -528,13 +529,12 @@ namespace Paperwallz
             maxTime = settingsWindow.Timespan;
             if (maxTime < timeLeft)
                 timeLeft = maxTime;
+            settingsChangedTime = true;
 
             if (oldUsername != settingsWindow.Username || oldPassword != settingsWindow.Password)
                 signedin = false;
 
-            UpdateTime(); // this causes slight timeleft changes whenever maxtime is changed
-                          // the bigger the trackbar.maximum the better the precision
-
+            UpdateTime();
             UpdateSwitch();
         }
 
@@ -574,6 +574,12 @@ namespace Paperwallz
         {
             if (!trackBar.Enabled)
                 return;
+
+            if (settingsChangedTime)
+            {
+                settingsChangedTime = false;
+                return;
+            }
 
             timeLeft = new TimeSpan((long)Math.Round((1 - (double)trackBar.Value / trackBar.Maximum) * maxTime.Ticks));
 

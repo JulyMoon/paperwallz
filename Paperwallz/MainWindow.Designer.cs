@@ -290,7 +290,7 @@ namespace Paperwallz
             // 
             this.trackBar.BackColor = System.Drawing.SystemColors.Control;
             this.trackBar.Location = new System.Drawing.Point(12, 108);
-            this.trackBar.Maximum = 3000;
+            this.trackBar.Maximum = 1000;
             this.trackBar.Name = "trackBar";
             this.trackBar.Size = new System.Drawing.Size(332, 45);
             this.trackBar.TabIndex = 21;
