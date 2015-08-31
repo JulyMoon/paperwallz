@@ -210,11 +210,6 @@
             this.hoursNumeric.Size = new System.Drawing.Size(50, 20);
             this.hoursNumeric.TabIndex = 0;
             this.hoursNumeric.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.hoursNumeric.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.hoursNumeric.ValueChanged += new System.EventHandler(this.NumericValueChanged);
             // 
             // okButton

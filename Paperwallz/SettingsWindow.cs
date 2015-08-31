@@ -28,7 +28,7 @@ namespace Paperwallz
             get { return timespan; }
             set
             {
-                timespan = value;
+                timespan = value < minimum ? minimum : value;
                 hoursNumeric.Value = oldHours = timespan.Hours;
                 minutesNumeric.Value = oldMinutes = timespan.Minutes;
                 secondsNumeric.Value = oldSeconds = timespan.Seconds;

@@ -98,36 +98,39 @@ namespace Paperwallz
 
             maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
 
-            if (Settings.Default.submissions[0] == "empty")
-                return;
-
-            var submissions = new string[Settings.Default.submissions.Count / 2][];
-            for (int i = 0; i < submissions.Length; i++)
-                submissions[i] = new string[2];
-
-            foreach (var pair in Settings.Default.submissions)
+            if (Settings.Default.submissions[0] != "empty")
             {
-                var separate = Separate(pair);
-                var key = separate[0];
-                var value = separate[1];
+                var submissions = new string[Settings.Default.submissions.Count / 2][];
+                for (int i = 0; i < submissions.Length; i++)
+                    submissions[i] = new string[2];
 
-                var split = key.Split(' ');
-                int n = Int32.Parse(split[0]) - 1;
-
-                int m = -1;
-                switch (split[1])
+                foreach (var pair in Settings.Default.submissions)
                 {
-                    case "t": m = 0; break;
-                    case "f": m = 1; break;
+                    var separate = Separate(pair);
+                    var key = separate[0];
+                    var value = separate[1];
+
+                    var split = key.Split(' ');
+                    int n = Int32.Parse(split[0]) - 1;
+
+                    int m = -1;
+                    switch (split[1])
+                    {
+                        case "t": m = 0; break;
+                        case "f": m = 1; break;
+                    }
+
+                    submissions[n][m] = value;
                 }
 
-                submissions[n][m] = value;
+                for (int i = 0; i < submissions.Length; i++)
+                    queueList.Items.Add(new ListViewItem(new[] { (i + 1).ToString(), submissions[i][0], submissions[i][1] }));
             }
 
-            for (int i = 0; i < submissions.Length; i++)
-                queueList.Items.Add(new ListViewItem(new[] {(i + 1).ToString(), submissions[i][0], submissions[i][1]}));
-
             UpdateSwitch();
+
+            if (Settings.Default.height >= MinimumSize.Height && Settings.Default.height <= MaximumSize.Height)
+                Height = Settings.Default.height;
         }
 
         private void UpdateAddButton()
@@ -357,6 +360,8 @@ namespace Paperwallz
                 submissions.Add("empty");
 
             Settings.Default.submissions = submissions;
+
+            Settings.Default.height = Height;
 
             Settings.Default.Save();
         }
