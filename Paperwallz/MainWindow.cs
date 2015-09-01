@@ -304,7 +304,7 @@ namespace Paperwallz
 
         private void pasteButton_Click(object sender, EventArgs e)
         {
-            if (!Clipboard.ContainsText())
+            if (!Clipboard.ContainsText() || Clipboard.GetText() == "")
                 return;
 
             urlTextBox.Text = Clipboard.GetText();
