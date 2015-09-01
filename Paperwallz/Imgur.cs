@@ -29,7 +29,12 @@ namespace Paperwallz
         private static string ImageToBase64String(System.Drawing.Image image)
         {
             var ms = new MemoryStream();
-            image.Save(ms, ImageFormat.Png);
+
+            image.Save(ms, ImageFormat.Jpeg);
+            // Jpeg con: large images will be reduced in size a little
+            // Png con: 405 Wrong method if the file is several mbs
+            // Result: Jpeg wins B O Y S :D
+
             return Convert.ToBase64String(ms.ToArray());
         }
 
@@ -59,37 +64,21 @@ namespace Paperwallz
 
         private Image InternalUpload(object imageSource, bool url, string title, string description)
         {
-            string response = null;
-
-            try
+            return new Image(Encoding.ASCII.GetString(client.UploadValues("image", new NameValueCollection
             {
-                var data = new NameValueCollection()
                 {
-                    {
-                        "image", url ? (string)imageSource : ImageToBase64String((System.Drawing.Image)imageSource)
-                    },
-                    {
-                        "title", title
-                    },
-                    {
-                        "description", description
-                    },
-                    {
-                        "type", url ? "URL" : "base64"
-                    }
-                };
-
-                response = Encoding.ASCII.GetString(client.UploadValues("image", data));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
-            }
-
-            if (response == null)
-                throw new ApplicationException("Too big image or bad image format");
-
-            return new Image(response);
+                    "image", url ? (string)imageSource : ImageToBase64String((System.Drawing.Image)imageSource)
+                },
+                {
+                    "title", title
+                },
+                {
+                    "description", description
+                },
+                {
+                    "type", url ? "URL" : "base64"
+                }
+            })));
         }
 
         public Image Upload(System.Drawing.Image image, string title, string description)
@@ -117,6 +106,5 @@ namespace Paperwallz
         {
             return !(a == b);
         }
-
     }
 }

@@ -259,7 +259,7 @@ namespace Paperwallz
                     {
                         image = imgur.Upload(new Bitmap(args.File), args.Title, description);
                     }
-                    catch (ApplicationException)
+                    catch (WebException)
                     {
                         e.Result = "The image is too big or has bad format.";
                         return;
@@ -290,7 +290,7 @@ namespace Paperwallz
             }
             catch (Exception ex)
             {
-                e.Result = "Exception: " + ex + "\nMessage: " + ex.Message + "\nSource: " + ex.Source + "\nStackTrace: " + ex.StackTrace;
+                e.Result = "Exception: " + ex + "\nMessage: " + ex.Message + "\nSource: " + ex.Source;
             }
         }
 
