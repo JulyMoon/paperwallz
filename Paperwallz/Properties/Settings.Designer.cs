@@ -26,60 +26,60 @@ namespace Paperwallz.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string username {
+        public string Username {
             get {
-                return ((string)(this["username"]));
+                return ((string)(this["Username"]));
             }
             set {
-                this["username"] = value;
+                this["Username"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string password {
+        public string Password {
             get {
-                return ((string)(this["password"]));
+                return ((string)(this["Password"]));
             }
             set {
-                this["password"] = value;
+                this["Password"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("01:00:00")]
-        public global::System.TimeSpan maxtime {
+        public global::System.TimeSpan MaxTime {
             get {
-                return ((global::System.TimeSpan)(this["maxtime"]));
+                return ((global::System.TimeSpan)(this["MaxTime"]));
             }
             set {
-                this["maxtime"] = value;
+                this["MaxTime"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool firsttime {
+        public bool FirstTime {
             get {
-                return ((bool)(this["firsttime"]));
+                return ((bool)(this["FirstTime"]));
             }
             set {
-                this["firsttime"] = value;
+                this["FirstTime"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int height {
+        public int Height {
             get {
-                return ((int)(this["height"]));
+                return ((int)(this["Height"]));
             }
             set {
-                this["height"] = value;
+                this["Height"] = value;
             }
         }
         
@@ -88,12 +88,24 @@ namespace Paperwallz.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
             "tring>empty</string>\r\n</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection submissions {
+        public global::System.Collections.Specialized.StringCollection Submissions {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["submissions"]));
+                return ((global::System.Collections.Specialized.StringCollection)(this["Submissions"]));
             }
             set {
-                this["submissions"] = value;
+                this["Submissions"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2015-08-30")]
+        public global::System.DateTime LastSubmissionTime {
+            get {
+                return ((global::System.DateTime)(this["LastSubmissionTime"]));
+            }
+            set {
+                this["LastSubmissionTime"] = value;
             }
         }
     }

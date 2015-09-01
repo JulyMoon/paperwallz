@@ -55,10 +55,10 @@ namespace Paperwallz
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
-            if (Settings.Default.firsttime)
+            if (Settings.Default.FirstTime)
             {
                 ShowSettingsWindow();
-                Settings.Default.firsttime = false;
+                Settings.Default.FirstTime = false;
             }
         }
 
@@ -93,18 +93,18 @@ namespace Paperwallz
 
         private void ReadConfig()
         {
-            settingsWindow.Username = Settings.Default.username;
-            settingsWindow.Password = Settings.Default.password;
+            settingsWindow.Username = Settings.Default.Username;
+            settingsWindow.Password = Settings.Default.Password;
 
-            maxTime = settingsWindow.Timespan = Settings.Default.maxtime;
+            maxTime = settingsWindow.Timespan = Settings.Default.MaxTime;
 
-            if (Settings.Default.submissions[0] != "empty")
+            if (Settings.Default.Submissions[0] != "empty")
             {
-                var submissions = new string[Settings.Default.submissions.Count / 2][];
+                var submissions = new string[Settings.Default.Submissions.Count / 2][];
                 for (int i = 0; i < submissions.Length; i++)
                     submissions[i] = new string[2];
 
-                foreach (var pair in Settings.Default.submissions)
+                foreach (var pair in Settings.Default.Submissions)
                 {
                     var separate = Separate(pair);
                     var key = separate[0];
@@ -129,8 +129,8 @@ namespace Paperwallz
 
             UpdateSwitch();
 
-            if (Settings.Default.height >= MinimumSize.Height && Settings.Default.height <= MaximumSize.Height)
-                Height = Settings.Default.height;
+            if (Settings.Default.Height >= MinimumSize.Height && Settings.Default.Height <= MaximumSize.Height)
+                Height = Settings.Default.Height;
         }
 
         private void UpdateAddButton()
@@ -345,9 +345,9 @@ namespace Paperwallz
 
         private void SaveSettings()
         {
-            Settings.Default.username = settingsWindow.Username;
-            Settings.Default.password = settingsWindow.Password;
-            Settings.Default.maxtime = maxTime;
+            Settings.Default.Username = settingsWindow.Username;
+            Settings.Default.Password = settingsWindow.Password;
+            Settings.Default.MaxTime = maxTime;
 
             var submissions = new StringCollection();
             for (int i = 0; i < queueList.Items.Count; i++)
@@ -359,9 +359,9 @@ namespace Paperwallz
             if (submissions.Count == 0)
                 submissions.Add("empty");
 
-            Settings.Default.submissions = submissions;
+            Settings.Default.Submissions = submissions;
 
-            Settings.Default.height = Height;
+            Settings.Default.Height = Height;
 
             Settings.Default.Save();
         }
@@ -595,8 +595,21 @@ namespace Paperwallz
 
         private void queueList_ItemActivate(object sender, EventArgs e)
         {
-            if (IsValidUrl(queueList.Items[selectedIndex].SubItems[2].Text))
-                Process.Start(GetItemFile(selectedIndex)); // TODO: validate input so this doesnt throw an exception
+            string file = queueList.Items[selectedIndex].SubItems[2].Text;
+
+            if (IsValidUrl(file))
+                Process.Start(file); // TODO: validate input so this doesnt throw an exception
+            else
+            {
+                if (!File.Exists(file))
+                {
+                    MessageBox.Show("Wallpaper not found. The queue will stop if this file will start submitting. You better delete it now.",
+                        "File not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Process.Start("explorer.exe", "/select, " + "\"" + file + "\"");
+            }
         }
 
         private void trackBar_ValueChanged(object sender, EventArgs e)
