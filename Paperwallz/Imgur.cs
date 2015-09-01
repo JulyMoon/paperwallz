@@ -86,6 +86,9 @@ namespace Paperwallz
                 Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
             }
 
+            if (response == null)
+                throw new ApplicationException("Too big image or bad image format");
+
             return new Image(response);
         }
 

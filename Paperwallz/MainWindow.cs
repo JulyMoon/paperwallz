@@ -249,9 +249,23 @@ namespace Paperwallz
 
                 string description = "This image was uploaded using Paperwallz by /u/foxneZz. OP: /u/" + args.Username;
 
-                var image = args.IsUrl ? imgur.Upload(args.File, args.Title, description)
-                                       : imgur.Upload(new Bitmap(args.File), args.Title, description);
-                
+                Imgur.Image image;
+
+                if (args.IsUrl)
+                    image = imgur.Upload(args.File, args.Title, description);
+                else
+                {
+                    try
+                    {
+                        image = imgur.Upload(new Bitmap(args.File), args.Title, description);
+                    }
+                    catch (ApplicationException)
+                    {
+                        e.Result = "The image is too big or has bad format.";
+                        return;
+                    }
+                }
+
                 int i = 0;
                 while (true)
                 {
