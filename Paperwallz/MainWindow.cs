@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security.Authentication;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Paperwallz.Properties;
@@ -94,7 +95,7 @@ namespace Paperwallz
         private void ReadConfig()
         {
             settingsWindow.Username = Settings.Default.Username;
-            settingsWindow.Password = Settings.Default.Password;
+            settingsWindow.Password = PseudoDecrypt(Settings.Default.Password);
 
             maxTime = settingsWindow.Timespan = Settings.Default.MaxTime;
 
@@ -346,7 +347,7 @@ namespace Paperwallz
         private void SaveSettings()
         {
             Settings.Default.Username = settingsWindow.Username;
-            Settings.Default.Password = settingsWindow.Password;
+            Settings.Default.Password = PseudoEncrypt(settingsWindow.Password);
             Settings.Default.MaxTime = maxTime;
 
             var submissions = new StringCollection();
@@ -626,6 +627,24 @@ namespace Paperwallz
             timeLeft = new TimeSpan((long)Math.Round((1 - (double)trackBar.Value / trackBar.Maximum) * maxTime.Ticks));
 
             UpdateTimeLabel();
+        }
+
+        private static string PseudoEncrypt(string s)
+        {
+            return Convert.ToBase64String(Magic(Encoding.Unicode.GetBytes(s)));
+        }
+
+        private static byte[] Magic(byte[] bytes)
+        {
+            for (int i = 0; i < bytes.Length; i++)
+                bytes[i] ^= 98;
+
+            return bytes;
+        }
+
+        private static string PseudoDecrypt(string s)
+        {
+            return Encoding.Unicode.GetString(Magic(Convert.FromBase64String(s)));
         }
     }
 }
