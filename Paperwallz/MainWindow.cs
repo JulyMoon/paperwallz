@@ -413,11 +413,19 @@ namespace Paperwallz
             UpdateSwitch();
 
             if (imageControl.SelectedIndex == 0)
-                SettingsWindow.SetText(urlTextBox, "");
+                EmptyPossiblyActiveTextbox(urlTextBox);
             else
                 openFileDialog.FileName = filenameLabel.Text = "";
 
-            SettingsWindow.SetText(titleTextBox, "");
+            EmptyPossiblyActiveTextbox(titleTextBox);
+        }
+
+        private void EmptyPossiblyActiveTextbox(TextBoxBase textbox)
+        {
+            SettingsWindow.SetText(textbox, "");
+
+            if (ActiveControl == textbox)
+                TextBox_Enter(textbox, new EventArgs());
         }
 
         private void Swap(int a, int b)
