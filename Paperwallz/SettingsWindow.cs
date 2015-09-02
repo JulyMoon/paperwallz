@@ -56,6 +56,13 @@ namespace Paperwallz
         private void SettingsWindow_Shown(object sender, EventArgs e)
         {
             Apply();
+
+            if (Username == "")
+                usernameTextBox.Focus();
+            else if (Password == "")
+                passwordTextBox.Focus();
+            else
+                okButton.Focus();
         }
 
         private void Apply()

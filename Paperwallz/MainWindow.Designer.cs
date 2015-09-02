@@ -175,7 +175,7 @@ namespace Paperwallz
             this.queueList.Location = new System.Drawing.Point(12, 191);
             this.queueList.MultiSelect = false;
             this.queueList.Name = "queueList";
-            this.queueList.Size = new System.Drawing.Size(332, 145);
+            this.queueList.Size = new System.Drawing.Size(332, 146);
             this.queueList.TabIndex = 13;
             this.queueList.UseCompatibleStateImageBehavior = false;
             this.queueList.View = System.Windows.Forms.View.Details;
@@ -312,7 +312,7 @@ namespace Paperwallz
             this.AcceptButton = this.addButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(356, 348);
+            this.ClientSize = new System.Drawing.Size(356, 349);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.timeLeftLabel);

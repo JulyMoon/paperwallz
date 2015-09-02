@@ -29,7 +29,7 @@ namespace Paperwallz
         private TimeSpan maxTime;
         private bool submitting;
         private ListViewItem beingSubmitted;
-        private readonly string[] essentialDlls = { "HtmlAgilityPack.dll", "Newtonsoft.Json.dll", "RedditSharp.dll" };
+        private readonly string[] essentialDlls = { "HtmlAgilityPack.dll", "Newtonsoft.Json.dll", "RedditSharp.dll", "ChreneLib.dll" };
         private const string clientId = "8ee17b899ab80c3";
         private readonly Imgur imgur = new Imgur(clientId);
         private Subreddit wallpapers;
