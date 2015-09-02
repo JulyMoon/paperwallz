@@ -35,7 +35,6 @@ namespace Paperwallz
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.browseButton = new System.Windows.Forms.Button();
-            this.urlTextBox = new System.Windows.Forms.TextBox();
             this.openButton = new System.Windows.Forms.Button();
             this.aboutButton = new System.Windows.Forms.Button();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
@@ -57,7 +56,8 @@ namespace Paperwallz
             this.settingsButton = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trackBar = new System.Windows.Forms.TrackBar();
-            this.titleTextBox = new System.Windows.Forms.TextBox();
+            this.titleTextBox = new ChreneLib.Controls.TextBoxes.CTextBox();
+            this.urlTextBox = new ChreneLib.Controls.TextBoxes.CTextBox();
             this.imageControl.SuspendLayout();
             this.urlTab.SuspendLayout();
             this.pcTab.SuspendLayout();
@@ -78,20 +78,6 @@ namespace Paperwallz
             this.browseButton.Text = "Browse";
             this.browseButton.UseVisualStyleBackColor = true;
             this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
-            // 
-            // urlTextBox
-            // 
-            this.urlTextBox.AccessibleName = "Image url";
-            this.urlTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.urlTextBox.Location = new System.Drawing.Point(84, 9);
-            this.urlTextBox.Name = "urlTextBox";
-            this.urlTextBox.Size = new System.Drawing.Size(234, 20);
-            this.urlTextBox.TabIndex = 5;
-            this.urlTextBox.Text = "Image url";
-            this.urlTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
-            this.urlTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
-            this.urlTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // openButton
             // 
@@ -189,7 +175,7 @@ namespace Paperwallz
             this.queueList.Location = new System.Drawing.Point(12, 191);
             this.queueList.MultiSelect = false;
             this.queueList.Name = "queueList";
-            this.queueList.Size = new System.Drawing.Size(332, 159);
+            this.queueList.Size = new System.Drawing.Size(332, 145);
             this.queueList.TabIndex = 13;
             this.queueList.UseCompatibleStateImageBehavior = false;
             this.queueList.View = System.Windows.Forms.View.Details;
@@ -299,25 +285,34 @@ namespace Paperwallz
             // 
             // titleTextBox
             // 
-            this.titleTextBox.AccessibleName = "The title goes here";
-            this.titleTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
             this.titleTextBox.Location = new System.Drawing.Point(12, 82);
-            this.titleTextBox.MaxLength = 250;
             this.titleTextBox.Name = "titleTextBox";
             this.titleTextBox.Size = new System.Drawing.Size(172, 20);
-            this.titleTextBox.TabIndex = 22;
-            this.titleTextBox.Text = "The title goes here";
-            this.titleTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
+            this.titleTextBox.TabIndex = 23;
+            this.titleTextBox.WaterMark = "The title goes here";
+            this.titleTextBox.WaterMarkActiveForeColor = System.Drawing.SystemColors.GrayText;
+            this.titleTextBox.WaterMarkFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleTextBox.WaterMarkForeColor = System.Drawing.SystemColors.GrayText;
             this.titleTextBox.TextChanged += new System.EventHandler(this.titleTextBox_TextChanged);
-            this.titleTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
-            this.titleTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
+            // 
+            // urlTextBox
+            // 
+            this.urlTextBox.Location = new System.Drawing.Point(84, 9);
+            this.urlTextBox.Name = "urlTextBox";
+            this.urlTextBox.Size = new System.Drawing.Size(234, 20);
+            this.urlTextBox.TabIndex = 24;
+            this.urlTextBox.WaterMark = "Image url";
+            this.urlTextBox.WaterMarkActiveForeColor = System.Drawing.SystemColors.GrayText;
+            this.urlTextBox.WaterMarkFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.urlTextBox.WaterMarkForeColor = System.Drawing.SystemColors.GrayText;
+            this.urlTextBox.TextChanged += new System.EventHandler(this.urlTextBox_TextChanged);
             // 
             // MainWindow
             // 
             this.AcceptButton = this.addButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(356, 362);
+            this.ClientSize = new System.Drawing.Size(356, 348);
             this.Controls.Add(this.titleTextBox);
             this.Controls.Add(this.settingsButton);
             this.Controls.Add(this.timeLeftLabel);
@@ -356,7 +351,6 @@ namespace Paperwallz
 
         private OpenFileDialog openFileDialog;
         private Button browseButton;
-        private TextBox urlTextBox;
         private Button aboutButton;
         private Button openButton;
         private BackgroundWorker backgroundWorker;
@@ -378,7 +372,8 @@ namespace Paperwallz
         private Button settingsButton;
         private NotifyIcon notifyIcon;
         private TrackBar trackBar;
-        private TextBox titleTextBox;
+        private ChreneLib.Controls.TextBoxes.CTextBox titleTextBox;
+        private ChreneLib.Controls.TextBoxes.CTextBox urlTextBox;
     }
 }
 

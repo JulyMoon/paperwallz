@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Paperwallz
@@ -13,14 +12,14 @@ namespace Paperwallz
 
         public string Username
         {
-            get { return GetText(usernameTextBox); }
-            set { SetText(usernameTextBox, value); }
+            get { return usernameTextBox.Text; }
+            set { usernameTextBox.Text = value; }
         }
 
         public string Password
         {
-            get { return GetText(passwordTextBox); }
-            set { SetText(passwordTextBox, value); }
+            get { return passwordTextBox.Text; }
+            set { passwordTextBox.Text = value; }
         }
 
         public TimeSpan Timespan
@@ -45,71 +44,18 @@ namespace Paperwallz
             UpdateApply();
         }
 
-        private void TextBox_Enter(object sender, EventArgs e)
-        {
-            var textbox = (TextBoxBase)sender;
-
-            if (textbox.ForeColor == SystemColors.GrayText)
-            {
-                textbox.ForeColor = SystemColors.WindowText;
-                textbox.Text = "";
-            }
-            else
-                BeginInvoke((Action)textbox.SelectAll);
-        }
-
-        private void TextBox_Leave(object sender, EventArgs e)
-        {
-            var textbox = (TextBoxBase)sender;
-
-            SetText(textbox, textbox.Text);
-        }
-
-        private void TextBoxSelector(object sender, MouseEventArgs e)
-        {
-            var textbox = (TextBoxBase)sender;
-
-            if (textbox.SelectionLength == 0)
-                textbox.SelectAll();
-        }
-
-        private static string GetText(TextBoxBase textbox)
-        {
-            return MainWindow.HasText(textbox) ? textbox.Text : "";
-        }
-
-        public static void SetText(TextBoxBase textbox, string text)
-        {
-            if (text == "")
-            {
-                textbox.ForeColor = SystemColors.GrayText;
-                textbox.Text = textbox.AccessibleName;
-            }
-            else
-            {
-                textbox.ForeColor = SystemColors.WindowText;
-                textbox.Text = text;
-            }
-        }
-
         private void UpdateApply()
         {
             applyButton.Enabled = oldHours != hoursNumeric.Value ||
                                   oldMinutes != minutesNumeric.Value ||
                                   oldSeconds != secondsNumeric.Value ||
-                                  oldUsername != GetText(usernameTextBox) ||
-                                  oldPassword != GetText(passwordTextBox);
+                                  oldUsername != Username ||
+                                  oldPassword != Password;
         }
 
         private void SettingsWindow_Shown(object sender, EventArgs e)
         {
             Apply();
-
-            var textbox = ActiveControl as TextBoxBase;
-            if (textbox == null || MainWindow.HasText(textbox))
-                return;
-            
-            TextBox_Enter(textbox, new EventArgs());
         }
 
         private void Apply()
@@ -117,8 +63,8 @@ namespace Paperwallz
             oldHours = hoursNumeric.Value;
             oldMinutes = minutesNumeric.Value;
             oldSeconds = secondsNumeric.Value;
-            oldUsername = GetText(usernameTextBox);
-            oldPassword = GetText(passwordTextBox);
+            oldUsername = Username;
+            oldPassword = Password;
             applyButton.Enabled = false;
         }
 
@@ -164,8 +110,8 @@ namespace Paperwallz
                 hoursNumeric.Value = oldHours;
                 minutesNumeric.Value = oldMinutes;
                 secondsNumeric.Value = oldSeconds;
-                SetText(usernameTextBox, oldUsername);
-                SetText(passwordTextBox, oldPassword);
+                Username = oldUsername;
+                Password = oldPassword;
             }
 
             timespan = new TimeSpan((int)hoursNumeric.Value, (int)minutesNumeric.Value, (int)secondsNumeric.Value);
@@ -181,7 +127,7 @@ namespace Paperwallz
 
         public bool GotCredentials()
         {
-            return MainWindow.HasText(usernameTextBox) && MainWindow.HasText(passwordTextBox);
+            return Username != "" && Password != "";
         }
 
         private void applyButton_Click(object sender, EventArgs e)

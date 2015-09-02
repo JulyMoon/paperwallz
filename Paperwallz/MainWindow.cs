@@ -141,29 +141,24 @@ namespace Paperwallz
 
         private void urlTextBox_TextChanged(object sender, EventArgs e)
         {
-            gotFile = HasText(urlTextBox);
+            gotFile = urlTextBox.Text != "";
             UpdateAddButton();
         }
 
         private void titleTextBox_TextChanged(object sender, EventArgs e)
         {
-            gotTitle = HasText(titleTextBox);
+            gotTitle = titleTextBox.Text != "";
             UpdateAddButton();
         }
 
         private void imageControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (imageControl.SelectedIndex == 0)
-                gotFile = HasText(urlTextBox);
+                gotFile = urlTextBox.Text != "";
             else
                 gotFile = openFileDialog.FileName != "";
 
             UpdateAddButton();
-        }
-
-        public static bool HasText(TextBoxBase textbox)
-        {
-            return textbox.ForeColor == SystemColors.WindowText && textbox.Text.Length > 0;
         }
 
         private struct ScriptArgs // maybe we can access these variables directly in DoWork?
@@ -187,34 +182,6 @@ namespace Paperwallz
 
             gotFile = true;
             UpdateAddButton();
-        }
-
-        private void TextBox_Enter(object sender, EventArgs e)
-        {
-            var textbox = (TextBoxBase)sender;
-
-            if (textbox.ForeColor == SystemColors.GrayText)
-            {
-                textbox.ForeColor = SystemColors.WindowText;
-                textbox.Text = "";
-            }
-            else
-                BeginInvoke((Action)textbox.SelectAll);
-        }
-
-        private void TextBox_Leave(object sender, EventArgs e)
-        {
-            var textbox = (TextBoxBase)sender;
-
-            SettingsWindow.SetText(textbox, textbox.Text);
-        }
-
-        private void TextBoxSelector(object sender, MouseEventArgs e)
-        {
-            var textbox = (TextBoxBase)sender;
-
-            if (textbox.SelectionLength == 0)
-                textbox.SelectAll();
         }
 
         private void openButton_Click(object sender, EventArgs e)
@@ -322,10 +289,6 @@ namespace Paperwallz
                 return;
 
             urlTextBox.Text = Clipboard.GetText();
-            urlTextBox.ForeColor = SystemColors.WindowText;
-            urlTextBox.SelectionStart = urlTextBox.Text.Length;
-
-            urlTextBox_TextChanged(new object(), new EventArgs());
         }
 
         private void queueList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -413,19 +376,11 @@ namespace Paperwallz
             UpdateSwitch();
 
             if (imageControl.SelectedIndex == 0)
-                EmptyPossiblyActiveTextbox(urlTextBox);
+                urlTextBox.Text = "";
             else
                 openFileDialog.FileName = filenameLabel.Text = "";
 
-            EmptyPossiblyActiveTextbox(titleTextBox);
-        }
-
-        private void EmptyPossiblyActiveTextbox(TextBoxBase textbox)
-        {
-            SettingsWindow.SetText(textbox, "");
-
-            if (ActiveControl == textbox)
-                TextBox_Enter(textbox, new EventArgs());
+            titleTextBox.Text = "";
         }
 
         private void Swap(int a, int b)

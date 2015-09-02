@@ -40,6 +40,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChreneLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ChreneLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="RedditSharp">
       <HintPath>.\RedditSharp.dll</HintPath>
@@ -112,6 +116,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ChreneLib.dll" />
     <Content Include="HtmlAgilityPack.dll" />
     <Content Include="Newtonsoft.Json.dll" />
     <Content Include="paperplane.ico" />

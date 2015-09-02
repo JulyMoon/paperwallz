@@ -30,8 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsWindow));
             this.redditGroupBox = new System.Windows.Forms.GroupBox();
-            this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.usernameTextBox = new System.Windows.Forms.TextBox();
             this.timeGroupBox = new System.Windows.Forms.GroupBox();
             this.warningLabel = new System.Windows.Forms.Label();
             this.secondsLabel = new System.Windows.Forms.Label();
@@ -45,6 +43,8 @@
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.applyButton = new System.Windows.Forms.Button();
+            this.usernameTextBox = new ChreneLib.Controls.TextBoxes.CTextBox();
+            this.passwordTextBox = new ChreneLib.Controls.TextBoxes.CTextBox();
             this.redditGroupBox.SuspendLayout();
             this.timeGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.secondsNumeric)).BeginInit();
@@ -62,37 +62,6 @@
             this.redditGroupBox.TabIndex = 0;
             this.redditGroupBox.TabStop = false;
             this.redditGroupBox.Text = "Reddit";
-            // 
-            // passwordTextBox
-            // 
-            this.passwordTextBox.AccessibleName = "Password";
-            this.passwordTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.passwordTextBox.Location = new System.Drawing.Point(112, 19);
-            this.passwordTextBox.MaxLength = 250;
-            this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(100, 20);
-            this.passwordTextBox.TabIndex = 2;
-            this.passwordTextBox.Text = "Password";
-            this.passwordTextBox.UseSystemPasswordChar = true;
-            this.passwordTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.passwordTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.passwordTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
-            this.passwordTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
-            // 
-            // usernameTextBox
-            // 
-            this.usernameTextBox.AccessibleName = "Username";
-            this.usernameTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.usernameTextBox.Location = new System.Drawing.Point(6, 19);
-            this.usernameTextBox.MaxLength = 20;
-            this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(100, 20);
-            this.usernameTextBox.TabIndex = 1;
-            this.usernameTextBox.Text = "Username";
-            this.usernameTextBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxSelector);
-            this.usernameTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
-            this.usernameTextBox.Enter += new System.EventHandler(this.TextBox_Enter);
-            this.usernameTextBox.Leave += new System.EventHandler(this.TextBox_Leave);
             // 
             // timeGroupBox
             // 
@@ -243,6 +212,31 @@
             this.applyButton.UseVisualStyleBackColor = true;
             this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
             // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(6, 19);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(100, 20);
+            this.usernameTextBox.TabIndex = 5;
+            this.usernameTextBox.WaterMark = "Username";
+            this.usernameTextBox.WaterMarkActiveForeColor = System.Drawing.SystemColors.GrayText;
+            this.usernameTextBox.WaterMarkFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.usernameTextBox.WaterMarkForeColor = System.Drawing.SystemColors.GrayText;
+            this.usernameTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.Location = new System.Drawing.Point(112, 19);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.Size = new System.Drawing.Size(100, 20);
+            this.passwordTextBox.TabIndex = 5;
+            this.passwordTextBox.UseSystemPasswordChar = true;
+            this.passwordTextBox.WaterMark = "Password";
+            this.passwordTextBox.WaterMarkActiveForeColor = System.Drawing.SystemColors.GrayText;
+            this.passwordTextBox.WaterMarkFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.passwordTextBox.WaterMarkForeColor = System.Drawing.SystemColors.GrayText;
+            this.passwordTextBox.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
+            // 
             // SettingsWindow
             // 
             this.AcceptButton = this.okButton;
@@ -292,7 +286,7 @@
         private System.Windows.Forms.Label secondsLabel;
         private System.Windows.Forms.Label minutesLabel;
         private System.Windows.Forms.Label warningLabel;
-        private System.Windows.Forms.TextBox usernameTextBox;
-        private System.Windows.Forms.TextBox passwordTextBox;
+        private ChreneLib.Controls.TextBoxes.CTextBox usernameTextBox;
+        private ChreneLib.Controls.TextBoxes.CTextBox passwordTextBox;
     }
 }
