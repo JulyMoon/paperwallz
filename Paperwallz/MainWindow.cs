@@ -194,6 +194,25 @@ namespace Paperwallz
             aboutWindow.ShowDialog();
         }
 
+        private static string Wallhaven(string url)
+        {
+            if (Regex.IsMatch(url, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
+            {
+                string contents = new WebClient().DownloadString(url);
+                int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
+                if (index != -1)
+                {
+                    index += 9;
+                    return "http:" + contents.Substring(index,
+                               contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
+                }
+                
+                throw new Exception("Perhaps wallhaven changed their html pages?");
+            }
+
+            return url;
+        }
+
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var args = (ScriptArgs)e.Argument;
@@ -219,7 +238,11 @@ namespace Paperwallz
                 Imgur.Image image;
 
                 if (args.IsUrl)
+                {
+                    args.File = Wallhaven(args.File);
+
                     image = imgur.Upload(args.File, args.Title, description);
+                }
                 else
                 {
                     try
@@ -433,26 +456,11 @@ namespace Paperwallz
                     switchButton.Enabled = false;
                 }
 
-                string file = beingSubmitted.SubItems[2].Text;
-                bool isUrl = IsValidUrl(beingSubmitted.SubItems[2].Text);
-
-                if (isUrl && Regex.IsMatch(file, @"http://alpha.wallhaven.cc/wallpaper/\d+"))
-                {
-                    string contents = new WebClient().DownloadString(file);
-                    int index = contents.IndexOf(@"content=""//", StringComparison.Ordinal);
-                    if (index != -1)
-                    {
-                        index += 9;
-                        file = "http:" + contents.Substring(index,
-                                   contents.IndexOf(@"""", index, StringComparison.Ordinal) - index);
-                    }
-                }
-
                 backgroundWorker.RunWorkerAsync(new ScriptArgs
                 {
                     Title = beingSubmitted.SubItems[1].Text,
-                    File = file,
-                    IsUrl = isUrl,
+                    File = beingSubmitted.SubItems[2].Text,
+                    IsUrl = IsValidUrl(beingSubmitted.SubItems[2].Text),
                     Username = settingsWindow.Username,
                     Password = settingsWindow.Password
                 });
