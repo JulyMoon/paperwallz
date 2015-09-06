@@ -34,7 +34,7 @@ namespace Paperwallz
         private readonly Imgur imgur = new Imgur(clientId);
         private Subreddit wallpapers;
         private bool signedin;
-        private bool settingsChangedTime;
+        private bool manuallyChangedTime;
 
         public MainWindow()
         {
@@ -94,10 +94,17 @@ namespace Paperwallz
 
         private void ReadConfig()
         {
+            maxTime = settingsWindow.Timespan = Settings.Default.MaxTime;
+
+            var tl = Settings.Default.TimeLeft - (DateTime.Now - Settings.Default.SaveTime);
+            if (tl < TimeSpan.Zero)
+                tl = TimeSpan.Zero;
+
+            timeLeft = tl;
+            manuallyChangedTime = true;
+
             settingsWindow.Username = Settings.Default.Username;
             settingsWindow.Password = PseudoDecrypt(Settings.Default.Password);
-
-            maxTime = settingsWindow.Timespan = Settings.Default.MaxTime;
 
             if (Settings.Default.Submissions[0] != "empty")
             {
@@ -361,8 +368,9 @@ namespace Paperwallz
                 submissions.Add("empty");
 
             Settings.Default.Submissions = submissions;
-
             Settings.Default.Height = Height;
+            Settings.Default.TimeLeft = timeLeft;
+            Settings.Default.SaveTime = DateTime.Now;
 
             Settings.Default.Save();
         }
@@ -544,7 +552,7 @@ namespace Paperwallz
             maxTime = settingsWindow.Timespan;
             if (maxTime < timeLeft)
                 timeLeft = maxTime;
-            settingsChangedTime = true;
+            manuallyChangedTime = true;
 
             if (oldUsername != settingsWindow.Username || oldPassword != settingsWindow.Password)
                 signedin = false;
@@ -603,9 +611,9 @@ namespace Paperwallz
             if (!trackBar.Enabled)
                 return;
 
-            if (settingsChangedTime)
+            if (manuallyChangedTime)
             {
-                settingsChangedTime = false;
+                manuallyChangedTime = false;
                 return;
             }
 

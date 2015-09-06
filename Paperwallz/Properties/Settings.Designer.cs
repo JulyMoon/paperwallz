@@ -99,13 +99,24 @@ namespace Paperwallz.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2015-08-30")]
-        public global::System.DateTime LastSubmissionTime {
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan TimeLeft {
             get {
-                return ((global::System.DateTime)(this["LastSubmissionTime"]));
+                return ((global::System.TimeSpan)(this["TimeLeft"]));
             }
             set {
-                this["LastSubmissionTime"] = value;
+                this["TimeLeft"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime SaveTime {
+            get {
+                return ((global::System.DateTime)(this["SaveTime"]));
+            }
+            set {
+                this["SaveTime"] = value;
             }
         }
     }
