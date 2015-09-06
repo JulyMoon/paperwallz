@@ -1,6 +1,10 @@
 # Paperwallz (beta)
 
-What it does:
+Who made this:
+
+/u/foxneZz on Reddit
+
+What does it do:
 
 Posts your wallpapers to /r/wallpapers with delay inbetween
 
